@@ -62,7 +62,7 @@ class GetMoneyLog(models.Model):
         ShangmiUser,
         verbose_name="用户"
     )
-    money = models.models.DecimalField(
+    money = models.DecimalField(
         max_digits=20,
         decimal_places=2,
         verbose_name="金额"
