@@ -121,6 +121,10 @@ class Active(models.Model):
     give_money = models.IntegerField(
         verbose_name="活动给予积分"
     )
+    is_fast = models.BooleanField(
+        default=True,
+        verbose_name="是否快速"
+    )
 
     class Meta:
         verbose_name = "活动表"
