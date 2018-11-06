@@ -1,5 +1,5 @@
 from django.db import models
-
+from .choices import *
 # Create your models here.
 class ShangmiUser(models.Model):
     openid = models.CharField(
@@ -121,6 +121,10 @@ class Active(models.Model):
     give_money = models.IntegerField(
         verbose_name="活动给予积分"
     )
+    share_give_money = models.IntegerField(
+        verbose_name="分享成功所得积分",
+        null=True
+    )
     is_fast = models.BooleanField(
         default=True,
         verbose_name="是否快速"
@@ -146,3 +150,55 @@ class ActiveStoreMap(models.Model):
     class Meta:
         verbose_name = "活动与门店关系表"
         unique_together = ['store', 'active'] #联合约束
+
+
+class UserPayLog(models.Model):
+    user = models.ForeignKey(
+        ShangmiUser,
+        verbose_name="普通用户"
+    )
+    store = models.ForeignKey(
+        Store,
+        verbose_name="门店"
+    )
+    money = models.IntegerField(
+        verbose_name="差价钱数"
+    )
+    integral = models.IntegerField(
+        verbose_name="使用的积分数"
+    )
+    wx_pay_num = models.CharField(
+        max_length=255,
+        verbose_name="微信支付订单号"
+    )
+    create_time = models.DateTimeField(
+        verbose_name="创建时间",
+        auto_now_add=True
+    )
+    class Meta:
+        verbose_name = "用户付款表"
+        index_together = ["user", "store"]
+
+
+class UserActiveLog(models.Model):
+    user = models.ForeignKey(
+        ShangmiUser
+    )
+    active = models.ForeignKey(
+        Active
+    )
+    integral = models.IntegerField(
+        verbose_name="当时所获积分"
+    )
+    create_time = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="参加时间"
+    )
+    type = models.CharField(
+        max_length=10,
+        choices=INTEGRAL_TYPE,
+        verbose_name="奖励来源"
+    )
+    class Meta:
+        verbose_name = "用户获取积分记录表"
+

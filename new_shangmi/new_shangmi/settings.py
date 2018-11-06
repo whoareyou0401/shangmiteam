@@ -83,7 +83,6 @@ DATABASES = {
         "PASSWORD": os.environ.get("DBPWD")
     }
 }
-
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
@@ -145,3 +144,70 @@ EMAIL_HOST_PASSWORD = "yaricwaaydxvbggb"  # 授权码（****）
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_BACKEND ='django.core.mail.backends.smtp.EmailBackend'
 SERVER_EMAIL=EMAIL_HOST_USER
+
+SMALL_WEIXIN_TOKEN_VALID_TIME = 60 * 60 * 24 * 30
+
+
+ADMINS = (
+    ('liuda', 'liuda@1000phone.com'),
+    ("mengge", "805388584@qq.com")
+)
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'standard': {
+            'format': '%(asctime)s [%(threadName)s:%(thread)d] [%(name)s:%(lineno)d] [%(module)s:%(funcName)s] [%(levelname)s]- %(message)s'
+        },
+        'easy':{
+            'format': '%(asctime)s|%(funcName)s|%(message)s'
+        }
+    },
+    'filters': { #过滤条件
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+        'require_debug_true':{
+            '()': 'django.utils.log.RequireDebugTrue', #邀要求debug是True
+        }
+    },
+    'handlers': {
+        'mail_admins': {  #一旦线上代码报错 邮件提示
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'filters': ['require_debug_false'],
+        },
+        'debug': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, "log", 'debug.log'),  # 文件路径
+            'maxBytes': 1024 * 1024 * 5, #5兆的数据
+            'backupCount': 5, #允许有5这样的文件
+            'formatter': 'easy', #格式
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'standard',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['debug'],
+            'level': 'DEBUG',
+            'propagate': False
+        },
+        'django.request': {
+            'handlers': ['debug', 'mail_admins'],
+            'level': 'ERROR',
+            'propagate': True, #是否继承父类的log信息
+        },
+        # 对于不在 ALLOWED_HOSTS 中的请求不发送报错邮件
+        'django.security.DisallowedHost': {
+            'handlers': ['debug'],
+            'propagate': False,
+        },
+    }
+}
