@@ -1,59 +1,107 @@
 import json
 import uuid
 import datetime
+import time
 import requests
-from django.core.cache import cache
-from django.http import HttpResponse, JsonResponse
+from django.core.cache import cache, caches
+from django.http import HttpResponse, JsonResponse, QueryDict, HttpResponseForbidden
 from django.views.generic import View
 from os import environ
 from django.conf import settings
-import pay_util
-# from pay_util import *
-# from shangmi import utils
-# from .models import ReflectLog, StoreSalerMap
+from .pay_util import *
+from .models import *
+import xmltodict
+
+user_cache = caches['user']
+class OrderAPI(View):
+
+    def post(self, req):
+        user = ShangmiUser.objects.get(pk=int(user_cache.get(
+            req.POST.get("token")
+        )))
+        use = req.POST.get("use")
+        id = int(req.POST.get("id"))
+        money = float(req.POST.get("money")) * 100
+
+        need = money
+        integral = 0
+        status = 0
+        if use == "true":
+            need = money - float(user.balance.money)
+            if need < 0:
+                user.balance.money = float(user.balance.money) - money
+                user.balance.save()
+                is_success = 1
+                integral = money
+                status = 1
+            else:
+                integral = user.balance.money
+                # 用户积分清0
+                user.balance.money = 0
+                user.balance.save()
+                # 需要付钱
+                is_success = 0
+        elif use=="false":
+            is_success = 0
+        log = UserPayLog.objects.create(
+            user=user,
+            store_id=id,
+            money=need,
+            integral=integral,
+            status=status
+        )
+        if is_success == 0:
+            log.wx_pay_num = create_mch_billno(str(log.id))
+        order_num = datetime.datetime.now().strftime("%Y%m%d%H%M") + str(log.id)
+        log.order_num = order_num
+        log.save()
+        data = {
+            "code": 0,
+            "data": {
+                "is_success": is_success,
+                "need": need,
+                "id": log.id
+            }
+        }
+        return JsonResponse(data)
 
 class pay_unifiedorder(View):
-    params = QueryDict(request.body)
+
 
     def post(self, request):
-        if request.META.has_key('HTTP_X_FORWARDED_FOR'):
+        params = QueryDict(request.body)
+        if request.META.get('HTTP_X_FORWARDED_FOR'):
             ip = request.META.get('HTTP_X_FORWARDED_FOR')
         else:
             ip = request.META.get('REMOTE_ADDR')
         if ip in getattr(settings, 'BLOCKED_IPS', []):
             return HttpResponseForbidden('<h1>Forbbidden</h1>')
-        token = params.get('token')
+        user = ShangmiUser.objects.get(pk=int(user_cache.get(
+            params.get("token")
+        )))
         order_id = params.get('order_id')
-        openid = pay_util.confirm_validate_token(token)
-        sid = int(cache.get(openid))
-        store = models.Store.objects.get(id=sid)
-        if hasattr(store, 'cvsconfig'):
-            config = store.cvsconfig
-        else:
-            raise Exception('No config')
-        # user = User.objects.get(openid=openid)
-        # helper = CartHelper(openid)
-        # cart_items = helper.get()
-        # amount = cart_items.get('amount')
+        amount = params.get("need")
+        log = UserPayLog.objects.get(id=order_id)
         randuuid = uuid.uuid4()
         nonce_str = str(randuuid).replace('-', '')
-        out_trade_no = pay_util.create_mch_billno(str(order_id))
-        cache.set(out_trade_no, order_id, timeout=24 * 60 * 60)
+        out_trade_no = log.wx_pay_num
+        # log.wx_pay_num = out_trade_no
+        # log.save()
         url = 'https://api.mch.weixin.qq.com/pay/unifiedorder'
         data = {}
-        data['body'] = u'超便利'
-        data['mch_id'] = config.mch_id
+        data['body'] = 'ShangMi'.encode('utf-8')
+        data['mch_id'] = settings.MCHID
         data['nonce_str'] = nonce_str
         # data['device_info'] = 'WEB'
-        data['total_fee'] = str(int(amount * 100))
+        data['total_fee'] = str(int(amount))
         data['spbill_create_ip'] = ip
         # data['fee_type'] = 'CNY'
-        data['openid'] = openid
+        data['openid'] = user.openid
         data['out_trade_no'] = out_trade_no
-        data['notify_url'] = 'https://%s/api/v1.0/pay/notify' % (request.get_host())
-        data['appid'] = config.appid
+        data['notify_url'] = 'https://sharemsg.cn/shangmi/api/v1/pay/notify'
+        data['appid'] = settings.PAY_APPID
         data['trade_type'] = 'JSAPI'
-        data['sign'] = pay_util.sign(data, config.pay_api_key)
+        data['sign'] = sign(data, settings.PAY_KEY)
         template = """
                     <xml>
                     <appid>{appid}</appid>
@@ -72,8 +120,8 @@ class pay_unifiedorder(View):
         content = template.format(**data)
         headers = {'Content-Type': 'application/xml'}
         raw = requests.post(url, data=content, headers=headers)
-        rdict = pay_util.xml_response_to_dict(raw)
-
+        rdict = xml_response_to_dict(raw)
+        # print('=------',rdict, '--------------')
         return_data = {}
         if rdict['return_code'] == 'SUCCESS' and rdict['result_code'] == 'SUCCESS':
             randuuid = uuid.uuid4()
@@ -85,16 +133,57 @@ class pay_unifiedorder(View):
             sign_data['package'] = 'prepay_id=%s' % rdict['prepay_id']
             sign_data['signType'] = 'MD5'
             sign_data['timeStamp'] = time_stamp
-            paySign = pay_util.sign(sign_data, config.pay_api_key)
+            paySign = sign(sign_data, settings.PAY_KEY)
             return_data['appId'] = rdict['appid']
             return_data['paySign'] = paySign
             return_data['nonceStr'] = nonce_str
             return_data['timeStamp'] = time_stamp
             return_data['package'] = 'prepay_id=%s' % rdict['prepay_id']
             return_data['signType'] = 'MD5'
-            return {'data': return_data}
+            return JsonResponse({'data': return_data, "code":0})
         else:
             return JsonResponse({'code': 1, 'data': u'支付失败'})
+
+
+class PayNotifyAPI(View):
+
+    def post(self, request):
+        d = xmltodict.parse(request.body)
+        resp = dict(d['xml'])
+        return_code = resp.get('return_code')
+        data = {}
+        if return_code == 'SUCCESS':
+            """
+            todo 这里需要做签名校验
+            """
+            # order_id = cache.get()
+            log = UserPayLog.objects.get(wx_pay_num=resp.get('out_trade_no'))
+            # log.wx_pay_num = resp.get('out_trade_no')
+
+
+
+            if resp.get('appid') == settings.PAY_APPID \
+                    and resp.get('mch_id') == settings.MCHID \
+                    and float(resp.get('total_fee')) == log.money:
+                log.status = 1
+                log.save()
+                data['return_code'] = 'SUCCESS'
+                data['return_msg'] = 'OK'
+            else:
+
+                data['return_code'] = 'FAIL'
+                data['return_msg'] = 'SIGNERROR'
+        else:
+            data['return_code'] = 'FAIL'
+            data['return_msg'] = 'OK'
+        template = """
+        <xml>
+            <return_code><![CDATA[{return_code}]]></return_code>
+            <return_msg><![CDATA[{return_msg}]]></return_msg>
+        </xml>
+        """
+        content = template.format(**data)
+        return HttpResponse(content, content_type='application/xml')
 
 # def store_get_money(req):
 #

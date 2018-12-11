@@ -19,13 +19,18 @@ class ShangmiUser(models.Model):
         max_length=30,
         verbose_name="用户来源"
     )
+    icon = models.CharField(
+        max_length=255,
+        null=True
+    )
 
 
 class Balance(models.Model):
     money = models.DecimalField(
         max_digits=20,
         decimal_places=2,
-        verbose_name="余额"
+        verbose_name="余额",
+        default=0
     )
     user = models.OneToOneField(
         ShangmiUser,
@@ -48,9 +53,12 @@ class Advertise(models.Model):
         max_length=255,
         verbose_name="海报封面"
     )
-    affect_time = models.DateField(
-        verbose_name="截止日期",
-        null=True
+    # affect_time = models.DateField(
+    #     verbose_name="截止日期",
+    #     null=True
+    # )
+    is_used = models.BooleanField(
+        default=True
     )
     class Meta:
         verbose_name = "海报"
@@ -77,6 +85,11 @@ class Store(models.Model):
     is_active = models.BooleanField(
         default=True,
         verbose_name="是否可用"
+    )
+    boss_phone = models.CharField(
+        max_length=15,
+        null=True,
+        verbose_name="授权手机号"
     )
 
 class GetMoneyLog(models.Model):
@@ -106,9 +119,14 @@ class Active(models.Model):
         max_length=255,
         verbose_name="海报封面"
     )
-    desc = models.CharField(
-        max_length=255,
+    desc = models.TextField(
+
         verbose_name="活动描述"
+    )
+    rule = models.CharField(
+        max_length=255,
+        verbose_name="活动规则",
+        null=True
     )
     is_active = models.BooleanField(
         default=True,
@@ -128,6 +146,14 @@ class Active(models.Model):
     is_fast = models.BooleanField(
         default=True,
         verbose_name="是否快速"
+    )
+    complete_num = models.IntegerField(
+        default=0,
+        verbose_name="完成量"
+    )
+    need_num = models.IntegerField(
+        default=0,
+        verbose_name="活动总量"
     )
 
     class Meta:
@@ -162,10 +188,17 @@ class UserPayLog(models.Model):
         verbose_name="门店"
     )
     money = models.IntegerField(
-        verbose_name="差价钱数"
+        verbose_name="差价钱数",
+        null=True
     )
     integral = models.IntegerField(
-        verbose_name="使用的积分数"
+        verbose_name="使用的积分数",
+        null=True
+    )
+    order_num = models.CharField(
+        max_length=255,
+        verbose_name="咱们自己的订单编号",
+        null=True
     )
     wx_pay_num = models.CharField(
         max_length=255,
@@ -174,6 +207,11 @@ class UserPayLog(models.Model):
     create_time = models.DateTimeField(
         verbose_name="创建时间",
         auto_now_add=True
+    )
+    status = models.IntegerField(
+        choices=PAY_STATUS,
+        verbose_name="支付状态",
+        default=0
     )
     class Meta:
         verbose_name = "用户付款表"
@@ -198,6 +236,11 @@ class UserActiveLog(models.Model):
         max_length=10,
         choices=INTEGRAL_TYPE,
         verbose_name="奖励来源"
+    )
+    status = models.IntegerField(
+        default=0,
+        verbose_name="审核状态",
+        choices=ACTIVE_STATUS
     )
     class Meta:
         verbose_name = "用户获取积分记录表"

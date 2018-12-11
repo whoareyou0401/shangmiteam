@@ -18,5 +18,7 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r"shangmi/api/v1/", include("shangmi.urls_apis_v1"))
+    url(r"^shangmi/api/v1/", include("shangmi.urls_apis_v1")),
+    url(r"^shangmi/api/v1/pay/", include("shangmi.urls_apis_v1_pay")),
+    url(r"^store/api/v1/", include("store.urls_apis_v1"))
 ]

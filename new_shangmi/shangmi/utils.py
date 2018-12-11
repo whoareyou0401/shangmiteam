@@ -1,18 +1,48 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
+from django.core.cache import caches
 from itsdangerous import URLSafeTimedSerializer as utsr
 from django.db import connection
 from django.utils import timezone
-from django.http import HttpResponse, QueryDict
+from django.http import HttpResponse, QueryDict, JsonResponse
 import base64
 import requests
 import six
-import models
+from .models import *
 import socket
 import hashlib
 import xmltodict
 import json
 from datetime import datetime
+
+user_cache = caches['user']
+
+
+def req_user(request):
+    if request.method == "GET":
+        token = request.GET.get('token')
+    else:
+        params = QueryDict(request.body)
+        token = params.get('token')
+    uid = user_cache.get("token")
+    if uid:
+        user = ShangmiUser.objects.get(pk=int(uid))
+    else:
+        return None
+    return user
+
+from functools import wraps
+def login_req(func):
+    @wraps
+    def inner(request, *args, **kwargs):
+        print(request)
+        user = req_user(request)
+        if not user:
+            return JsonResponse({})
+        request.user = user
+        res = func(request, *args, **kwargs)
+        return res
+    return inner
 
 
 def sign(params, sign_key="6C57AB91A1308E26B797F4CD382AC79D"):

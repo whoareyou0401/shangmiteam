@@ -14,9 +14,10 @@ def get_local_ip():
     return myaddr
 
 def sign(params, sign_key):
-    params = [(u'%s' % key, u'%s' % val) for key, val in params.iteritems() if val]
+    params = [(str(key), str(val)) for key, val in params.items() if val]
     sorted_params_string = '&'.join('='.join(pair) for pair in sorted(params))
-    sign_str = '{}&key={}'.format(sorted_params_string.encode('utf-8'), sign_key)
+    print(sorted_params_string)
+    sign_str = "{}&key={}".format(sorted_params_string, sign_key).encode("utf-8")
     print("---", sign_str)
     md5 = hashlib.md5()
     md5.update(sign_str)
@@ -29,9 +30,9 @@ def create_mch_billno(mch_id):
     mch_billno = '{}{}{}'.format(
         mch_id,
         now.strftime('%Y%m%d'),
-        str(randuuid.int)[:10])
+        str(randuuid.int)[:15])
     return mch_billno
 
 def xml_response_to_dict(rep):
-    d = xmltodict.parse(rep.content)
+    d = xmltodict.parse(rep.content.decode())
     return dict(d['xml'])
