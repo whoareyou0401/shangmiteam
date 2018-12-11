@@ -24,6 +24,13 @@ class OrderAPI(View):
         money = float(req.POST.get("money")) * 100
 
         need = money
+        store = Store.objects.get(id=id)
+        if store.is_active == False:
+            data = {
+                "code": 2,
+                "msg": "该店已经停止合作"
+            }
+            return JsonResponse(data)
         integral = 0
         status = 0
         if use == "true":
@@ -34,11 +41,22 @@ class OrderAPI(View):
                 is_success = 1
                 integral = money
                 status = 1
+                store_balance = Balance.objects.get_or_create(
+                    user=store.boss
+                )[0]
+                store_balance.money = float(user.balance.money) + money
+                store_balance.save()
             else:
                 integral = user.balance.money
                 # 用户积分清0
                 user.balance.money = 0
                 user.balance.save()
+                # 给店老板加钱
+                store_balance = Balance.objects.get_or_create(
+                    user=store.boss
+                )[0]
+                store_balance.money = float(user.balance.money) + integral
+                store_balance.save()
                 # 需要付钱
                 is_success = 0
         elif use=="false":
@@ -185,109 +203,119 @@ class PayNotifyAPI(View):
         content = template.format(**data)
         return HttpResponse(content, content_type='application/xml')
 
-# def store_get_money(req):
-#
-#     user = utils.request_user(req)
-#     params = req.POST
-#     store_id = int(params.get('store_id'))
-#     identity = params.get('identity')
-#
-#     # 检查是否超过体现次数
-#     now = datetime.datetime.now()
-#     logs = ReflectLog.objects.filter(
-#         user_id=user.id,
-#         create_time__year=now.year,
-#         create_time__month=now.month,
-#         create_time__day=now.day
-#     )
-#     if logs.count() >= 2:
-#         data = {
-#             'code': 6,
-#             'msg': "今日提现次数已达上限",
-#             'data': ""
-#         }
-#         return JsonResponse(data)
-#     money = float(req.POST.get("money"))
-#     # 判断最大体现金额
-#     if money > 10000:
-#         data = {
-#             'code': 6,
-#             'msg': "单次提现金额不能超过一万元",
-#             'data': ""
-#         }
-#         return JsonResponse(data)
-#     # 查看当前金额
-#     current_money = 0
-#     if identity == 'boss':
-#         current_money = utils.get_boss_money(store_id)
-#     if identity == 'saler':
-#         smap = StoreSalerMap.objects.get(
-#             saler__user_id=user.id,
-#             store_id=store_id)
-#         current_money = utils.get_saler_money(store_id, smap.saler.id)
-#
-#
-#     if current_money < money:
-#         return JsonResponse({"code":5, "data":"金额过大"})
-#     ip = req.META["REMOTE_ADDR"]
-#     mchid = environ.get('MCHID')
-#     pay_key = environ.get("PAY_KEY")
-#     appid = environ.get('PAY_APPID')
-#     log = ReflectLog.objects.create(
-#         user=user,
-#         money=money,
-#
-#     )
-#     log.partner_trade_no = create_mch_billno(str(log.id).rjust(14).replace(" ", "0"))
-#     log.save()
-#
-#     randuuid = uuid.uuid4()
-#     nonce_str = str(randuuid).replace('-', '').upper()
-#     partner_trade_no = log.partner_trade_no
-#     data = {}
-#     data["spbill_create_ip"] = ip
-#     data['mch_appid'] = 'wxebd828458f8b2b38'
-#     data['mchid'] = mchid
-#     data['nonce_str'] = nonce_str
-#     data['partner_trade_no'] = partner_trade_no
-#     data['openid'] = user.openid
-#     data['re_user_name'] = user.wx_name if user.wx_name else ''
-#     data['amount'] = money * 100
-#     data['check_name'] = 'NO_CHECK'
-#     data['desc'] = "提现"
-#     data['sign'] = sign(data, pay_key)
-#     data_template = """
-#                     <xml>
-#                         <mch_appid>{mch_appid}</mch_appid>
-#                         <mchid>{mchid}</mchid>
-#                         <nonce_str>{nonce_str}</nonce_str>
-#                         <partner_trade_no>{partner_trade_no}</partner_trade_no>
-#                         <openid>{openid}</openid>
-#                         <check_name>{check_name}</check_name>
-#                         <re_user_name>{re_user_name}</re_user_name>
-#                         <amount>{amount}</amount>
-#                         <desc>{desc}</desc>
-#                         <spbill_create_ip>{spbill_create_ip}</spbill_create_ip>
-#                         <sign>{sign}</sign>
-#                     </xml>""".format(**data)
-#
-#     headers = {'Content-Type': 'application/xml'}
-#     raw = requests.post(settings.IMPORTTANT_URL,
-#                         data=data_template,
-#                         headers=headers,
-#                         cert=(settings.WEIXIN_PAY_CERT_PATH, settings.WEIXIN_PAY_CERT_KEY_PATH))
-#     rdict = xml_response_to_dict(raw)
-#     data = {}
-#     if rdict.get("return_code") == "SUCCESS" and rdict.get("result_code") == "SUCCESS":
-#         payment_no = rdict.get("payment_no")
-#         log.payment_no = payment_no
-#         log.is_ok = True
-#         log.save()
-#         data["code"] = 0
-#         data["data"] = {"current_money": current_money-money}
-#     else:
-#         data = {
-#             "data":{"current_money": current_money-money},
-#             "code":0
-#         }
-#     return JsonResponse(data)
+class StoreGetMoneyAPI(View):
+    def post(self, req):
+        user = ShangmiUser.objects.get(pk=int(user_cache.get(
+            req.POST.get("token")
+        )))
+        params = req.POST
+        # store = user.store_set.all()[0]
+        money = float(params.get('money'))
+        if money<1:
+            data = {
+                "code": 2,
+                "data": "提现金额不能小于1元"
+            }
+        # 检查是否超过体现次数
+        now = datetime.datetime.now()
+        logs = GetMoneyLog.objects.filter(
+            user_id=user.id,
+            create_time__year=now.year,
+            create_time__month=now.month,
+            create_time__day=now.day,
+            is_ok=True
+        )
+        if logs.count() >= 2:
+            data = {
+                'code': 6,
+                'msg': "今日提现次数已达上限",
+                'data': ""
+            }
+            return JsonResponse(data)
+
+        # 判断最大体现金额
+        if money > 10000:
+            data = {
+                'code': 6,
+                'msg': "单次提现金额不能超过一万元",
+                'data': ""
+            }
+            return JsonResponse(data)
+        # 查看当前金额
+        current_money = 0
+        print(dir(user))
+        if user.balance.money < money * 100:
+            data  = {
+                "code": 2,
+                "msg": "体现金额超过余额",
+                "data":''
+            }
+            return JsonResponse(data)
+
+        ip = req.META["REMOTE_ADDR"]
+        mchid = environ.get('MCHID')
+        pay_key = environ.get("PAY_KEY")
+        appid = environ.get('PAY_STORE_GET_MONEY_APPID')
+        log = GetMoneyLog.objects.create(
+            user=user,
+            money=money
+        )
+        log.partner_trade_no = create_mch_billno(str(log.id).rjust(14).replace(" ", "0"))
+        log.save()
+
+        randuuid = uuid.uuid4()
+        nonce_str = str(randuuid).replace('-', '').upper()
+        partner_trade_no = log.partner_trade_no
+        data = {}
+        data["spbill_create_ip"] = ip
+        data['mch_appid'] = appid
+        data['mchid'] = mchid
+        data['nonce_str'] = nonce_str
+        data['partner_trade_no'] = partner_trade_no
+        data['openid'] = user.openid
+        data['re_user_name'] = user.nick_name if user.nick_name else ''
+        data['amount'] = str(int(money * 100))
+        data['check_name'] = 'NO_CHECK'
+        data['desc'] = "提现"
+        data['sign'] = sign(data, pay_key)
+        data['re_user_name'] = data['re_user_name'].encode("utf-8").decode("latin1")
+        data['desc'] = data['desc'].encode("utf-8").decode("latin1")
+        print(data)
+        data_template = """
+                        <xml>
+                            <mch_appid>{mch_appid}</mch_appid>
+                            <mchid>{mchid}</mchid>
+                            <nonce_str>{nonce_str}</nonce_str>
+                            <partner_trade_no>{partner_trade_no}</partner_trade_no>
+                            <openid>{openid}</openid>
+                            <check_name>{check_name}</check_name>
+                            <re_user_name>{re_user_name}</re_user_name>
+                            <amount>{amount}</amount>
+                            <desc>{desc}</desc>
+                            <spbill_create_ip>{spbill_create_ip}</spbill_create_ip>
+                            <sign>{sign}</sign>
+                        </xml>""".format(**data)
+
+        headers = {'Content-Type': 'application/xml'}
+        raw = requests.post(settings.IMPORTTANT_URL,
+                            data=data_template,
+                            headers=headers,
+                            cert=(settings.WEIXIN_PAY_CERT_PATH, settings.WEIXIN_PAY_CERT_KEY_PATH))
+        rdict = xml_response_to_dict(raw)
+        data = {}
+        print(rdict)
+        if rdict.get("return_code") == "SUCCESS" and rdict.get("result_code") == "SUCCESS":
+            payment_no = rdict.get("payment_no")
+            log.payment_no = payment_no
+            log.is_ok = True
+            log.save()
+            user.balance.money = float(user.balance.money) - money * 100
+            user.balance.save()
+            data["code"] = 0
+            data["data"] = {"current_money": current_money-money}
+        else:
+            data = {
+                "data":{"current_money": current_money-money},
+                "code":0
+            }
+        return JsonResponse(data)

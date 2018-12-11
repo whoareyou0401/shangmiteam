@@ -106,6 +106,18 @@ class GetMoneyLog(models.Model):
         verbose_name="创建时间",
         auto_now_add=True
     )
+    partner_trade_no = models.CharField(
+        max_length=255,
+        null=True,
+        verbose_name="下单号"
+    )
+    is_ok = models.BooleanField(
+        default=False
+    )
+    payment_no = models.CharField(
+        max_length=255,
+        null=True
+    )
     class Meta:
         verbose_name = "用户提现表"
 

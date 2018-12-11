@@ -235,3 +235,7 @@ LOGIN_TIMEOUT = 60*60*24*15 #15天
 MCHID = os.environ.get("MCHID")
 PAY_KEY = os.environ.get("PAY_KEY")
 PAY_APPID = "wx8b50ab8fa813a49e"
+
+IMPORTTANT_URL="https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers"
+WEIXIN_PAY_CERT_PATH = os.path.join(BASE_DIR, "pay_cert", "1357996702_20181006_cert.pem")
+WEIXIN_PAY_CERT_KEY_PATH = os.path.join(BASE_DIR, "pay_cert", "1357996702_20181006_key.pem")
