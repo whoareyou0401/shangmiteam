@@ -2,6 +2,8 @@ import json
 
 import requests
 from django.conf import settings
+from django.core.paginator import Paginator
+from django.db.models import Sum
 from django.forms import model_to_dict
 from django.http import JsonResponse, HttpResponse
 from django.views.generic import View
@@ -10,6 +12,8 @@ from .models import *
 from django.core.cache import caches
 from .getqr import *
 import uuid
+import datetime
+from django.db import connection
 user_cache = caches['user']
 class LoginAPI(View):
 
@@ -77,7 +81,7 @@ class ActivesAPI(View):
             if i.need_num == 0:
                 tmp["percent"] = "0%"
             else:
-                tmp["percent"] = str((i.complete_num / i.need_num) * 100) + "%"
+                tmp["percent"] = (i.complete_num / i.need_num) * 100
             fast_data.append(tmp)
         unfast_data = []
         for i in unfast:
@@ -85,7 +89,7 @@ class ActivesAPI(View):
             if i.need_num == 0:
                 tmp["percent"] = "0%"
             else:
-                tmp["percent"] = str((i.complete_num / i.need_num) * 100) + "%"
+                tmp["percent"] = (i.complete_num / i.need_num) * 100
             unfast_data.append(tmp)
         result = {
             "code": 1,
@@ -122,7 +126,18 @@ class IndexAPI(View):
         # 审核通过的
         finish_count = actives.filter(status=1).count()
         # 用户余额
+        now = datetime.datetime.now()
+        zero_now = now.replace(hour=0, minute=0, second=0)
+        today = actives.filter(
+            create_time__gte=zero_now,
+            create_time__lte=now,
+            status=True
+        ).aggregate(Sum("integral")).get("integral__sum")
 
+        if not today:
+            today = "0.00"
+        else:
+            today = '%.2f' % (today / 100)
         try:
             money = Balance.objects.get(user=user).money
         except:
@@ -130,9 +145,10 @@ class IndexAPI(View):
         data = {
             "code": 0,
             "data": {
-                'money': money,
+                'money': '%.2f' % (money / 100),
                 'doing_count': doing_count,
-                'finish_count': finish_count
+                'finish_count': finish_count,
+                "today": today
             }
         }
         return JsonResponse(data)
@@ -153,12 +169,34 @@ class UserActiveLogAPI(View):
             status=1
         ).order_by("-create_time")
         data_logs = []
+        page_num = int(req.GET.get("page"))
+        nums = req.GET.get("nums")
+        paginator = Paginator(logs, nums)
 
-        for i in logs:
+        log_data = []
+        try:
+            page = paginator.page(page_num)
+            page_data = page.object_list
+        except:
+            data = {
+                "code": 0,
+                "data": []
+            }
+            return JsonResponse(data)
+        # datas = []
+        help = []
+        for i in page_data:
             tmp = model_to_dict(i)
+            if i.create_time.date() in help:
+                tmp["show"] = False
+            else:
+                tmp["show"] = True
+                help.append(i.create_time.date())
+            time_str = i.create_time.strftime("%Y年%m月%d日 %H:%M:%S")
+            tmp["date"] = time_str.split(" ")[0]
 
-            tmp['create_time'] = i.create_time.strftime("%Y年%m月%d日 %H:%M")
-            tmp["status"] = i.get_status_display()
+            tmp['time'] = time_str.split(" ")[-1]
+            tmp["status"] = i.status
             tmp["active_msg"] = model_to_dict(i.active)
             tmp["type"] = i.get_type_display()
             data_logs.append(tmp)
@@ -177,13 +215,35 @@ class UserPayLogAPI(View):
             )
         )
         logs = UserPayLog.objects.filter(user=user, status=1).order_by("-create_time")
+        help = []
         datas = []
-        for i in logs:
+        page_num = int(req.GET.get("page"))
+        nums = req.GET.get("nums")
+        paginator = Paginator(logs, nums)
+        try:
+            page = paginator.page(page_num)
+            page_data = page.object_list
+        except:
+            data = {
+                "code": 0,
+                "data": []
+            }
+            return JsonResponse(data)
+        for i in page_data:
             tmp = model_to_dict(i)
-            tmp['create_time'] = i.create_time.strftime("%Y年%m月%d日 %H:%M:%S")
+            if i.create_time.date() in help:
+                tmp["show"] = False
+            else:
+                tmp["show"] = True
+                help.append(i.create_time.date())
+            time_str = i.create_time.strftime("%Y年%m月%d日 %H:%M:%S")
+            tmp["date"] = time_str.split(" ")[0]
+
+            tmp['time'] = time_str.split(" ")[-1]
             tmp["store_name"] = i.store.name
-            tmp["money"] = i.money / 100
-            tmp["integral"] = i.integral / 100
+            tmp["money"] = "%.2f" % (i.money / 100)
+            tmp["integral"] = "%.2f" % (i.integral / 100)
+            tmp.pop("order_num")
             datas.append(tmp)
 
         data = {
@@ -205,10 +265,32 @@ class TaskDetailAPI(View):
         )
         datas = UserActiveLog.objects.filter(user=user).order_by("-create_time")
         details = []
-        for i in datas:
+        page_num = int(req.GET.get("page"))
+        nums = req.GET.get("nums")
+        paginator = Paginator(datas, nums)
+        help = []
+        try:
+            page = paginator.page(page_num)
+            page_data = page.object_list
+        except:
+            data = {
+                "code": 0,
+                "data": []
+            }
+            return JsonResponse(data)
+        for i in page_data:
             tmp = model_to_dict(i)
-            tmp['create_time'] = i.create_time.strftime("%Y年%m月%d日 %H:%M")
-            tmp["status"] = i.get_status_display()
+            if i.create_time.date() in help:
+                tmp["show"] = False
+            else:
+                tmp["show"] = True
+                help.append(i.create_time.date())
+            time_str = i.create_time.strftime("%Y年%m月%d日 %H:%M:%S")
+            tmp["date"] = time_str.split(" ")[0]
+
+            tmp['time'] = time_str.split(" ")[-1]
+            # tmp['create_time'] = i.create_time.strftime("%Y年%m月%d日 %H:%M")
+            tmp["status"] = i.status
             tmp["active_msg"] = model_to_dict(i.active)
             tmp["type"] = i.get_type_display()
             details.append(tmp)
@@ -229,6 +311,29 @@ class ActiveAPI(View):
             "data": model_to_dict(active)
         }
         return JsonResponse(data)
+
+    # 创建活动
+    def post(self, req):
+        params = req.POST
+        name = params.get("name")
+        givemoney = params.get("givemoney")
+        share_give_money = params.get("share_give_money")
+        need_num = params.get("need_num")
+        user = ShangmiUser.objects.get(pk=int(user_cache.get(
+            req.POST.get("token")
+        )))
+        desc = params.get("desc", "")
+        icon = req.FILES.get("file")
+        # 将图片传到阿里云
+        store = user.store_set.all()[0]
+
+#         创建活动
+        active = Active.objects.create(
+            name=name,
+            icon=icon,
+            desc=desc
+        )
+#         创建活动与门店的关系映射 方便门店查看我发起的活动
 
 class ShareGetMoneyAPI(View):
 
@@ -286,6 +391,10 @@ class JoinActiveAPI(View):
             share_user_balance = Balance.objects.get(user_id=uid)
             share_user_balance.money += active.share_give_money
             share_user_balance.save()
+        # 判断活动是不是要结束
+        if active.complete_num == active.need_num:
+            active.is_active = False
+            active.save()
         data = {
             "code": 0,
             "data": "参与成功，积分已发放到个人中心"
@@ -327,3 +436,55 @@ class StoreAPI(View):
             store_dict["boss_icon"] = store.boss.icon
             store_dict["user_balance"] = balance.money / 100
             return JsonResponse({"code": 0, "data": store_dict})
+
+
+# 用户提现记录
+class UserGetMoneyLogAPI(View):
+    def get(self, req):
+        user = ShangmiUser.objects.get(
+            pk=int(user_cache.get(
+                req.GET.get("token")
+            )
+            )
+        )
+        page_num = int(req.GET.get("page"))
+        nums = req.GET.get("nums")
+        logs = GetMoneyLog.objects.filter(
+            user=user,
+            is_ok=True
+        ).order_by("-create_time")
+        paginator = Paginator(logs, nums)
+
+        log_data = []
+        try:
+            page = paginator.page(page_num)
+            page_data = page.object_list
+        except:
+            data = {
+                "code": 0,
+                "data": []
+            }
+            return JsonResponse(data)
+        datas = []
+        help = []
+        for i in page_data:
+            tmp = {}
+            if i.create_time.date() in help:
+                tmp["show"] = False
+            else:
+                tmp["show"] = True
+                help.append(i.create_time.date())
+            time_str = i.create_time.strftime("%Y年%m月%d日 %H:%M:%S")
+            tmp["date"] = time_str.split(" ")[0]
+
+            tmp['time'] = time_str.split(" ")[-1]
+            tmp["money"] = "%.2f" % (i.money)
+            datas.append(tmp)
+
+        data = {
+            "code": 0,
+            "data": datas
+        }
+        return JsonResponse(data)
+
+

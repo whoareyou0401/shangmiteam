@@ -11,5 +11,6 @@ urlpatterns = [
     url(r"^active$", ActiveAPI.as_view()),
     url(r"^join$", JoinActiveAPI.as_view()),
     url(r"^active-qr$", QrcodeAPI.as_view()),
-    url(r"^store$", StoreAPI.as_view())
+    url(r"^store$", StoreAPI.as_view()),
+    url(r"^get-money-history$", UserGetMoneyLogAPI.as_view())
 ]

@@ -1,4 +1,6 @@
 from django.db import models
+from django.views import View
+
 from .choices import *
 # Create your models here.
 class ShangmiUser(models.Model):
@@ -90,6 +92,10 @@ class Store(models.Model):
         max_length=15,
         null=True,
         verbose_name="授权手机号"
+    )
+    notice = models.BooleanField(
+        default=True,
+        verbose_name="是否接收通知"
     )
 
 class GetMoneyLog(models.Model):
@@ -256,4 +262,44 @@ class UserActiveLog(models.Model):
     )
     class Meta:
         verbose_name = "用户获取积分记录表"
+
+class UserRecharge(models.Model):
+
+    user = models.ForeignKey(
+        ShangmiUser,
+        verbose_name="用户"
+    )
+    money = models.FloatField(
+        verbose_name="充值金额"
+    )
+    create_time = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="创建时间"
+    )
+    is_ok = models.BooleanField(
+        default=False,
+        verbose_name="充值状态"
+    )
+    wx_pay_num = models.CharField(
+        max_length=255,
+        verbose_name="微信支付订单号"
+    )
+    class Meta:
+        verbose_name="用户充值"
+
+class StoreActiveBalance(models.Model):
+    store = models.ForeignKey(
+        Store,
+        verbose_name="门店"
+    )
+
+    balance = models.FloatField(
+        default=0,
+        verbose_name="活动金余额"
+    )
+    update_time = models.DateTimeField(
+        auto_now=True,
+        verbose_name="参加时间"
+    )
+
 

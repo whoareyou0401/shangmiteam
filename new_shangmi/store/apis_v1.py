@@ -4,6 +4,7 @@ from django.http import JsonResponse, HttpResponse
 from django.views import View
 import datetime
 from shangmi.models import *
+from django.core.paginator import Paginator
 from io import BytesIO
 
 user_cache = caches["user"]
@@ -41,22 +42,22 @@ class StoreTodayAPI(View):
         now = datetime.datetime.now()
         zore_now = now.replace(hour=0, minute=0, second=0)
         # 查看一个点
-        print(now, zore_now)
         logs = UserPayLog.objects.filter(
             store=store,
             create_time__gte=zore_now,
-            create_time__lte=now
+            create_time__lte=now,
+            status=True
         )
-        reward = amount = 0
+        money = reward = 0
         for log in logs:
-            amount = amount + log.integral + log.money
+            money = money + log.integral + log.money
             reward += log.integral
         data = {
             "code": 0,
             "data":{
-                "amount": amount / 100,
-                "reward": reward / 100,
-                "money": (amount - reward) / 100
+                "amount": round((money+reward) / 100, 2),
+                "reward": round(reward / 100, 2),
+                "money":  round(money / 100, 2)
             }
         }
         return JsonResponse(data)
@@ -81,3 +82,104 @@ class StoreQrcode(View):
         buf = BytesIO()
         img.save(buf)
         return HttpResponse(buf.getvalue(), content_type="image/png")
+
+
+class BossInfoAPI(View):
+
+    def get(self, req):
+        user = ShangmiUser.objects.get(
+            pk=int(user_cache.get(
+                req.GET.get("token")
+            )
+            )
+        )
+        user_info = {}
+        user_info["nick_name"] = user.nick_name
+        user_info["icon"] = user.icon
+        user_info["phone"] = user.store_set.all().first().boss_phone
+        user_info["balance"] = round(user.balance.money / 100, 2)
+        data = {
+            "code": 0,
+            "data": user_info
+        }
+        return JsonResponse(data)
+
+
+class StoreRewardAPI(View):
+
+    def get(self, req):
+        user = ShangmiUser.objects.get(
+            pk=int(user_cache.get(
+                req.GET.get("token")
+            )
+            )
+        )
+        page_num = int(req.GET.get("page"))
+        nums = req.GET.get("nums")
+        store = user.store_set.all()[0]
+        logs = UserPayLog.objects.filter(
+            store=store,
+            status=True
+        ).exclude(integral=0).order_by("-create_time")
+        paginator = Paginator(logs, nums)
+
+        log_data = []
+        try:
+            page = paginator.page(page_num)
+            page_data = page.object_list
+        except:
+            data = {
+                "code": 0,
+                "data": []
+            }
+            return JsonResponse(data)
+        for i in page_data:
+            tmp = {}
+            tmp["integral"] = round(i.integral / 100, 2)
+            tmp["time"] = i.create_time.strftime("%Y年%m月%d日 %H:%M:%S")
+            log_data.append(tmp)
+        data = {
+            "code": 0,
+            "data": log_data
+        }
+        return JsonResponse(data)
+
+class StoreIncomeMoneyAPI(View):
+
+    def get(self, req):
+        user = ShangmiUser.objects.get(
+            pk=int(user_cache.get(
+                req.GET.get("token")
+            )
+            )
+        )
+        page_num = int(req.GET.get("page"))
+        nums = req.GET.get("nums")
+        store = user.store_set.all()[0]
+        logs = UserPayLog.objects.filter(
+            store=store,
+            status=True
+        ).order_by("-create_time")
+        paginator = Paginator(logs, nums)
+
+        log_data = []
+        try:
+            page = paginator.page(page_num)
+            page_data = page.object_list
+        except:
+            data = {
+                "code": 0,
+                "data": []
+            }
+            return JsonResponse(data)
+        for i in page_data:
+            tmp = {}
+            tmp["money"] = round((i.integral + i.money) / 100, 2)
+            tmp["time"] = i.create_time.strftime("%Y年%m月%d日 %H:%M:%S")
+            log_data.append(tmp)
+        data = {
+            "code": 0,
+            "data": log_data
+        }
+        return JsonResponse(data)
+
