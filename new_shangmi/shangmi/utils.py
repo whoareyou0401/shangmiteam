@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+import uuid
+
 from django.conf import settings
-from django.core.cache import caches
+from django.core.cache import caches, cache
 from itsdangerous import URLSafeTimedSerializer as utsr
-from django.db import connection
-from django.utils import timezone
-from django.http import HttpResponse, QueryDict, JsonResponse
+
+from django.http import QueryDict, JsonResponse
 import base64
 import requests
 import six
@@ -13,9 +14,30 @@ import socket
 import hashlib
 import xmltodict
 import json
-from datetime import datetime
+import os
+from django.core.mail import send_mail
+from math import radians, cos, sin, asin, sqrt
 
 user_cache = caches['user']
+
+
+
+# 九堡30.307717 120.266319
+def haversine(lon1, lat1, lon2, lat2):  # 经度1，纬度1，经度2，纬度2 （十进制度数）
+    """
+    Calculate the great circle distance between two points
+    on the earth (specified in decimal degrees)
+    """
+    # 将十进制度数转化为弧度
+    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+
+    # haversine公式
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+    a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
+    c = 2 * asin(sqrt(a))
+    r = 6371  # 地球平均半径，单位为公里
+    return round(c * r, 2)
 
 
 def req_user(request):
@@ -31,7 +53,49 @@ def req_user(request):
         return None
     return user
 
+
+
+def send_mymail(store, active_name):
+    sub = "赏米"
+    recievers = [
+        "wangjia8621@sina.com",
+        "liuda@1000phone.com"
+    ]
+    msg = "{store_name}的老板{boss}申请了一个新的活动{name}，快去审核吧".format(
+        boss=store.boss.nick_name,
+        name=active_name,
+        store_name=store.name
+    )
+    send_mail(
+        sub,
+        msg,
+        settings.DEFAULT_FROM_EMAIL,
+        recievers
+    )
+    return "ok"
+
+def send_my_store_mail(store, active_name):
+    sub = "赏米"
+    recievers = [
+        "wangjia8621@sina.com",
+        "liuda@1000phone.com"
+    ]
+    msg = "{store_name}的老板{boss}申请了一个新的活动{name}，余额不足，请及时联系店老板".format(
+        boss=store.boss.nick_name,
+        name=active_name,
+        store_name=store.name
+    )
+    send_mail(
+        sub,
+        msg,
+        settings.DEFAULT_FROM_EMAIL,
+        recievers
+    )
+    return "ok"
+
 from functools import wraps
+
+
 def login_req(func):
     @wraps
     def inner(request, *args, **kwargs):
@@ -42,6 +106,7 @@ def login_req(func):
         request.user = user
         res = func(request, *args, **kwargs)
         return res
+
     return inner
 
 
@@ -85,12 +150,11 @@ def get_phone_area(phone):
 
 
 def get_url(url, params):
-    
     p = ''
     for key in params:
         p += "&" + key + "=" + str(params.get(key))
     sign_str = sign(params)
-    p = url + '?sign=' +sign_str + p
+    p = url + '?sign=' + sign_str + p
     return p
 
 
@@ -101,6 +165,7 @@ def dictfetchall(cursor):
         dict(zip(columns, row))
         for row in cursor.fetchall()
     ]
+
 
 def confirm_validate_token(token, expiration=settings.SMALL_WEIXIN_TOKEN_VALID_TIME):
     serializer = utsr(settings.SECRET_KEY)
@@ -137,46 +202,6 @@ def distance_to_location(current_lng, current_lat, radius):
     return [start_lng, end_lng, start_lat, end_lat]
 
 
-def search(key_word):
-    sql = '''
-    SELECT
-        i.*
-    FROM
-      recommendorder_item as i
-    WHERE
-      i.item_id in ('%(item_ids)s') AND
-      i.source = '%(source)s'
-    '''
-    cur = connection.cursor()
-    cur.execute(sql, {'item_ids': "','".join(item_list), 'source': source})
-    item_detail_list = dictfetchall(cur)
-
-
-def get_models_by_postion(position):
-    sql = '''
-    SELECT
-        models.*,
-        unlike.unlikes,
-        likes.likes
-    FROM "yalongApp_ylmodel" as models
-      LEFT JOIN (SELECT count(ulike.id) unlikes ,ulike.collecteder_id
-      FROM "yalongApp_unlike" AS ulike LEFT JOIN "yalongApp_ylmodel" as model
-      ON collecteder_id=model.id
-      GROUP BY collecteder_id) AS unlike
-      ON unlike.collecteder_id=models.id
-      LEFT JOIN (SELECT count(li.id) likes ,li.collecteder_id
-      FROM "yalongApp_like" AS li LEFT  JOIN "yalongApp_ylmodel" as model1
-      ON li.collecteder_id=model1.id
-      GROUP BY collecteder_id) AS likes
-      ON likes.collecteder_id=models.id
-    WHERE
-      models.position=1
-    '''
-    cur = connection.cursor()
-    cur.execute(sql, {'position': position })
-    item_detail_list = dictfetchall(cur)
-
-
 def dictfetchall(cursor):
     "Return all rows from a cursor as a dict"
     columns = [col[0] for col in cursor.description]
@@ -185,1068 +210,95 @@ def dictfetchall(cursor):
         for row in cursor.fetchall()
     ]
 
+def get_unique_name():
+    # 获得一个uuid字符串
+    uuid_val = uuid.uuid4()
+    # 将uuid转成字符串
+    uuid_str = str(uuid_val).encode("utf-8")
+    # 获得一个md5
+    md5 = hashlib.md5()
+    # 将uuid字符串 做摘要
+    md5.update(uuid_str)
+    # 返回32位16进制结果
+    return md5.hexdigest()
 
-def __category_names_to_ids(names):
-    cursor = connection.cursor()
-    cursor.execute("""
-        SELECT array_agg(id) as categories from standard_category where (%s)
-    """ % ' or '.join(["name='%s'" % n for n in names]))
-    result = dictfetchall(cursor)
-    return result[0]['categories']
-
-
-def __extract_operator(key):
-    toks = key.split('__')
-    if len(toks) == 2:
-        return toks[0], toks[1]
-    return key, None
-
-
-def __convert_to_sql(k, v):
-    if v['splitter'] == 'or':
-        sub = []
-        if k == 'category_id':
-            v['value'] = __category_names_to_ids(v['value'])
-
-        for i in v['value']:
-            sub.append("%s='%s'" % (k, i))
-        return '(%s)' % ' or '.join(sub)
-    elif v['splitter'] == 'between':
-        return "(%s between '%s' and '%s')" % (k, v['value'][0], v['value'][1])
+def get_access_token():
+    appid = "wxebd828458f8b2b38"  # os.environ.get("SHANGMI_GZ_APPID")
+    secret = "a40cb9c5ecb1f4f5c0f31b75829fed03"
+    params = {'appid': appid,
+              'secret': secret,
+              'grant_type': 'client_credential'}
+    url = 'https://api.weixin.qq.com/cgi-bin/token'
+    response = requests.get(url, params=params)
+    res = json.loads(response.content.decode())
+    return res.get('access_token')
 
 
-def __strip_each(l):
-    return [val.strip() for val in l]
+def get_access_token_function(appid, secret):
+    TEST_APP_ACCESS_TOKEN = 'test_app_access_token1'
+    access_token = cache.get(TEST_APP_ACCESS_TOKEN)
+    if access_token is None:
+        response = requests.get(
+            url="https://api.weixin.qq.com/cgi-bin/token",
+            params={
+                "grant_type": "client_credential",
+                "appid": appid,
+                "secret": secret,
+            }
+        )
+        response_json = response.json()
+        access_token = response_json['access_token']
+        TIME_OUT = 60 * 60
+        cache.set(
+            TEST_APP_ACCESS_TOKEN,
+            access_token,
+            TIME_OUT)
+    return access_token
 
 
-def growth_rate(rate):
-    if rate:
-        return '+%.2f' % rate if rate > 0 else '%.2f' % rate
+def send_template_msg(openid, log, form_id):
+    data = {
+        "touser": openid,
+        "template_id": "NmA5bKqWdiy1874A_fd3lhNm30-cKuPXGRtwnOIy-hg",
+        "page": "pages/detail/detail",
+        "form_id": form_id,
+        "data": {
+            "keyword1": {
+                "value": "%.2f" % ((log.money + log.integral) / 100)
+            },
+            "keyword2": {
+                "value": "%.2f" % (log.integral / 100)
+            },
+            "keyword3": {
+                "value": "%.2f" % (log.money / 100)
+            },
+            "keyword4": {
+                "value": log.create_time.strftime("%Y年%m月%d日 %H:%M:%S")
+            },
+            "keyword5": {
+                "value": log.store.boss.nick_name
+            }
+        }
+    }
 
+    # appid = "wxebd828458f8b2b38"  # os.environ.get("SHANGMI_GZ_APPID")
+    # secret = "a40cb9c5ecb1f4f5c0f31b75829fed03"  # os.environ.get("SHANGMI_GZ_SCERET")
+    appid = "wx8b50ab8fa813a49e"  # os.environ.get("SHANGMI_GZ_APPID")
+    secret = "b32f63c36ea123710173c4c9d4b15e8b"  # os.e
+    token = get_access_token_function(appid, secret)
+    # token = get_access_token()
+    url = settings.GET_MONEY_TEMPLTAE_URL + "?access_token=" + token
+    retry = 0
+    print(data)
+    # 三次重试
+    while retry < 3:
+        response = requests.post(url, data=json.dumps(data))
+        response_json = response.json()
+        print(response_json)
+        errcode = response_json.get('errcode')
+        errmsg = response_json.get('errmsg')
 
-def query_builder(q, m):
-    toks = q.split('@')
-    d = {}
-    for t in toks:
-        kv = t.strip().split('=')
-        if len(kv) != 2:
-            continue
-        key = kv[0].strip()
-        key, opeartor = __extract_operator(key)
-        if key in m:
-            if opeartor and opeartor == u'在':
-                values = kv[1].split('~')
-                if len(values) != 2:
-                    continue
-                d[m[key]] = {'splitter': 'between',
-                             'value': __strip_each(values)}
-            else:
-                d[m[key]] = {'splitter': 'or',
-                             'value': __strip_each(kv[1].split(','))}
-
-    out = []
-    for key, values in d.items():
-        out.append(__convert_to_sql(key, values))
-    return ' and '.join(out)
-
-
-def construct_where_clause(filter_dict, params):
-
-    def handle_single_filter(key):
-        if key.endswith('__contains'):
-            filter_dict[key] = '%' + filter_dict[key] + '%'
-            col_name = key[0: -len('__contains')]
-            return '%s LIKE %%(%s)s' % (col_name, key)
-        if key.endswith('__lt'):
-            col_name = key[0: -len('__lt')]
-            return '%s<%%(%s)s' % (col_name, key)
-        if key.endswith('__gt'):
-            col_name = key[0: -len('__gt')]
-            return '%s>%%(%s)s' % (col_name, key)
+        if errcode == 0 and errmsg == 'ok':
+            break
         else:
-            return '%s = %%(%s)s' % (key, key)
-
-    if filter_dict is None or len(filter_dict) == 0:
-        return ''
-    clauses = [handle_single_filter(k) for k in filter_dict.keys()]
-    for k, v in six.iteritems(filter_dict):
-        params[k] = v
-    return '\nWHERE ' + "\n AND \n\t".join(clauses)
-
-
-def get_store_active_v1(store_id, data_type, active_id):
-    if data_type == 'today':
-        today = timezone.now().date()
-        sql = """
-                SELECT 
-                    m.store_id, 
-                    m.active_id, 
-                    u.phone,
-                    to_char(log.time, 'YYYY-MM-DD HH24:MI:SS') AS time,
-                    active.name AS active_name,
-                    saler.name AS saler_name,
-                    plog.price AS price_sum,
-                    saler.is_boss
-                FROM 
-                    shangmi_activestoremap AS m 
-                LEFT JOIN 
-                    shangmi_activelog AS log 
-                ON 
-                    m.id=log.active_map_id 
-                LEFT JOIN 
-                    shangmi_active AS active 
-                ON 
-                    m.active_id=active.id 
-                LEFT JOIN 
-                    shangmi_saler AS saler
-                ON
-                    saler.id=log.saler_id
-                LEFT JOIN
-                    shangmi_customergetpricelog as plog
-                ON
-                    log.customer_get_price_log_id=plog.id
-                LEFT JOIN 
-                    shangmi_user AS u
-                ON
-                    plog.customer_id=u.id
-                WHERE 
-                    m.store_id={store_id}
-                AND 
-                    active.status=1  
-                AND 
-                    log.is_writeoff=FALSE
-                AND 
-                    log.time::date='{date}'
-                AND 
-                    active.id={active_id}
-                AND 
-                    plog.is_writeoff=TRUE;
-            """.format(store_id=store_id, date=today, active_id=active_id)
-    elif data_type == 'all':
-        sql = """
-                SELECT 
-                    m.store_id, 
-                    m.active_id, 
-                    u.phone,
-                    to_char(log.time, 'YYYY-MM-DD HH24:MI:SS') AS time,
-                    active.name AS active_name,
-                    saler.name AS saler_name,
-                    plog.price AS price_sum,
-                    saler.is_boss
-                FROM 
-                    shangmi_activestoremap AS m 
-                LEFT JOIN 
-                    shangmi_activelog AS log 
-                ON 
-                    m.id=log.active_map_id 
-                LEFT JOIN 
-                    shangmi_active AS active 
-                ON 
-                    m.active_id=active.id 
-                LEFT JOIN 
-                    shangmi_saler AS saler
-                ON
-                    saler.id=log.saler_id
-                LEFT JOIN
-                    shangmi_customergetpricelog as plog
-                ON
-                    log.customer_get_price_log_id=plog.id
-                LEFT JOIN 
-                    shangmi_user AS u
-                ON
-                    plog.customer_id=u.id
-                WHERE 
-                    m.store_id={store_id}
-                AND 
-                    active.status=1  
-                AND 
-                    plog.is_writeoff=TRUE
-                AND 
-                    log.is_writeoff=FALSE
-                AND 
-                    active.id={active_id};
-        """.format(store_id=store_id, active_id=active_id)
-    elif data_type == 'history':
-        sql = """
-                SELECT 
-                    m.store_id, 
-                    m.active_id, 
-                    u.phone,
-                    to_char(log.time, 'YYYY-MM-DD HH24:MI:SS') AS time,
-                    active.name AS active_name,
-                    saler.name AS saler_name,
-                    plog.price AS price_sum,
-                    saler.is_boss
-                FROM 
-                    shangmi_activestoremap AS m 
-                LEFT JOIN 
-                    shangmi_activelog AS log 
-                ON 
-                    m.id=log.active_map_id 
-                LEFT JOIN 
-                    shangmi_active AS active 
-                ON 
-                    m.active_id=active.id 
-                LEFT JOIN 
-                    shangmi_saler AS saler
-                ON
-                    saler.id=log.saler_id
-                LEFT JOIN
-                    shangmi_customergetpricelog as plog
-                ON
-                    log.customer_get_price_log_id=plog.id
-                LEFT JOIN 
-                    shangmi_user AS u
-                ON
-                    plog.customer_id=u.id
-                WHERE 
-                    m.store_id={store_id}
-                AND 
-                    active.status=1  
-                AND 
-                    log.is_writeoff=TRUE
-                AND 
-                    plog.is_writeoff=TRUE
-                AND 
-                    active.id={active_id}
-                ;
-        """.format(store_id=store_id, active_id=active_id)
-    else:
-        return []
-    cur = connection.cursor()
-    cur.execute(sql)
-    item_detail_list = dictfetchall(cur)
-    distribute = models.StoreMoneyDistribution.objects.get(
-        active_id=active_id)
-    for data in item_detail_list:
-        if data.get('is_boss') == True:
-            data['distribute'] = distribute.boss_money 
-        else:
-            data['distribute'] = distribute.boss_distribute_money
-        data['phone'] = data['phone'][0:3]+ '****'+ data['phone'][7:]
-    return item_detail_list
-
-
-def get_store_active(store_id, data_type, active_id):
-    if data_type == 'today':
-        today = timezone.now().date()
-        sql = """
-                SELECT 
-                    m.store_id, 
-                    m.active_id, 
-                    count(log.customer_id) AS num,
-                    MAX(active.name) AS active_name,
-                    max(saler.name) AS saler_name,
-                    sum(plog.price) AS price_sum
-                FROM 
-                    shangmi_activestoremap AS m 
-                LEFT JOIN 
-                    shangmi_activelog AS log 
-                ON 
-                    m.id=log.active_map_id 
-                LEFT JOIN 
-                    shangmi_active AS active 
-                ON 
-                    m.active_id=active.id 
-                LEFT JOIN 
-                    shangmi_saler AS saler
-                ON
-                    saler.id=log.saler_id
-                LEFT JOIN
-                    shangmi_customergetpricelog as plog
-                ON
-                    log.customer_get_price_log_id=plog.id
-                WHERE 
-                    m.store_id={store_id}
-                AND 
-                    active.status=1  
-                AND 
-                    log.is_writeoff=FALSE
-                AND 
-                    log.time::date='{date}'
-                AND 
-                    active.id={active_id}
-                AND 
-                    plog.is_writeoff=TRUE
-                GROUP BY 
-                    m.store_id, m.active_id, log.saler_id;
-            """.format(store_id=store_id, date=today, active_id=active_id)
-    elif data_type == 'all':
-        sql = """
-                SELECT 
-                    m.store_id, 
-                    m.active_id, 
-                    count(log.customer_id) AS num,
-                    MAX(active.name) AS active_name,
-                    max(saler.name) AS saler_name,
-                    sum(plog.price) AS price_sum
-                FROM 
-                    shangmi_activestoremap AS m 
-                LEFT JOIN 
-                    shangmi_activelog AS log 
-                ON 
-                    m.id=log.active_map_id 
-                LEFT JOIN 
-                    shangmi_active AS active 
-                ON 
-                    m.active_id=active.id 
-                LEFT JOIN 
-                    shangmi_saler AS saler
-                ON
-                    saler.id=log.saler_id
-                LEFT JOIN
-                    shangmi_customergetpricelog as plog
-                ON
-                    log.customer_get_price_log_id=plog.id
-                WHERE 
-                    m.store_id={store_id}
-                AND 
-                    active.status=1  
-                AND 
-                    plog.is_writeoff=TRUE
-                AND 
-                    log.is_writeoff=FALSE
-                AND 
-                    active.id={active_id}
-                GROUP BY 
-                    m.store_id, m.active_id, log.saler_id;
-        """.format(store_id=store_id, active_id=active_id)
-    elif data_type == 'history':
-        sql = """
-                SELECT 
-                    m.store_id, 
-                    m.active_id, 
-                    count(log.customer_id) AS num,
-                    MAX(active.name) AS active_name,
-                    max(saler.name) AS saler_name,
-                    sum(plog.price) AS price_sum
-                FROM 
-                    shangmi_activestoremap AS m 
-                LEFT JOIN 
-                    shangmi_activelog AS log 
-                ON 
-                    m.id=log.active_map_id 
-                LEFT JOIN 
-                    shangmi_active AS active 
-                ON 
-                    m.active_id=active.id 
-                LEFT JOIN 
-                    shangmi_saler AS saler
-                ON
-                    saler.id=log.saler_id
-                LEFT JOIN
-                    shangmi_customergetpricelog as plog
-                ON
-                    log.customer_get_price_log_id=plog.id
-                WHERE 
-                    m.store_id={store_id}
-                AND 
-                    active.status=1  
-                AND 
-                    log.is_writeoff=TRUE
-                AND 
-                    plog.is_writeoff=TRUE
-                AND 
-                    active.id={active_id}
-                GROUP BY 
-                    m.store_id, m.active_id, log.saler_id;
-        """.format(store_id=store_id, active_id=active_id)
-    else:
-        return []
-    cur = connection.cursor()
-    cur.execute(sql)
-    item_detail_list = dictfetchall(cur)
-    return item_detail_list
-
-
-def get_saler_active_v1(store_id, data_type, saler_id, active_id):
-    if data_type == 'today':
-        today = timezone.now().date()
-        sql = """
-                SELECT 
-                    m.store_id, 
-                    m.active_id, 
-                    u.phone,
-                    to_char(log.time, 'YYYY-MM-DD HH24:MI:SS') AS time,
-                    active.name AS active_name,
-                    saler.name AS saler_name,
-                    plog.price AS price_sum,
-                    saler.is_boss
-                FROM 
-                    shangmi_activestoremap AS m 
-                LEFT JOIN 
-                    shangmi_activelog AS log 
-                ON 
-                    m.id=log.active_map_id 
-                LEFT JOIN 
-                    shangmi_active AS active 
-                ON 
-                    m.active_id=active.id 
-                LEFT JOIN 
-                    shangmi_saler AS saler
-                ON
-                    saler.id=log.saler_id
-                LEFT JOIN
-                    shangmi_customergetpricelog as plog
-                ON
-                    log.customer_get_price_log_id=plog.id
-                LEFT JOIN 
-                    shangmi_user AS u
-                ON
-                    plog.customer_id=u.id
-                WHERE 
-                    m.store_id={store_id}
-                AND 
-                    active.status=1  
-                AND
-                    saler.id={saler_id}
-                AND 
-                    active.id={active_id}
-                AND 
-                    plog.is_writeoff=TRUE
-                AND 
-                    log.is_writeoff=FALSE
-                AND 
-                    log.time::date='{date}'
-                    
-            """.format(store_id=store_id, 
-                       date=today, 
-                       saler_id=saler_id, 
-                       active_id=active_id)
-    elif data_type == 'all':
-        sql = """
-                SELECT 
-                    m.store_id, 
-                    m.active_id, 
-                    u.phone,
-                    to_char(log.time, 'YYYY-MM-DD HH24:MI:SS') AS time,
-                    active.name AS active_name,
-                    saler.name AS saler_name,
-                    plog.price AS price_sum,
-                    saler.is_boss
-                FROM 
-                    shangmi_activestoremap AS m 
-                LEFT JOIN 
-                    shangmi_activelog AS log 
-                ON 
-                    m.id=log.active_map_id 
-                LEFT JOIN 
-                    shangmi_active AS active 
-                ON 
-                    m.active_id=active.id 
-                LEFT JOIN 
-                    shangmi_saler AS saler
-                ON
-                    saler.id=log.saler_id
-                LEFT JOIN
-                    shangmi_customergetpricelog as plog
-                ON
-                    log.customer_get_price_log_id=plog.id
-                LEFT JOIN 
-                    shangmi_user AS u
-                ON
-                    plog.customer_id=u.id
-                WHERE 
-                    m.store_id={store_id}
-                AND 
-                    active.status=1  
-                AND 
-                    plog.is_writeoff=TRUE
-                AND 
-                    log.is_writeoff=FALSE
-                AND
-                    saler.id={saler_id}
-                AND 
-                    active.id={active_id};
-        """.format(store_id=store_id, 
-                   saler_id=saler_id, 
-                   active_id=active_id)
-    elif data_type == 'history':
-        sql = """
-                SELECT 
-                    m.store_id, 
-                    m.active_id, 
-                    u.phone,
-                    to_char(log.time, 'YYYY-MM-DD HH24:MI:SS') AS time,
-                    active.name AS active_name,
-                    saler.name AS saler_name,
-                    plog.price AS price_sum,
-                    saler.is_boss
-                FROM 
-                    shangmi_activestoremap AS m 
-                LEFT JOIN 
-                    shangmi_activelog AS log 
-                ON 
-                    m.id=log.active_map_id 
-                LEFT JOIN 
-                    shangmi_active AS active 
-                ON 
-                    m.active_id=active.id 
-                LEFT JOIN 
-                    shangmi_saler AS saler
-                ON
-                    saler.id=log.saler_id
-                LEFT JOIN
-                    shangmi_customergetpricelog as plog
-                ON
-                    log.customer_get_price_log_id=plog.id
-                LEFT JOIN 
-                    shangmi_user AS u
-                ON
-                    plog.customer_id=u.id
-                WHERE 
-                    m.store_id={store_id}
-                AND 
-                    active.status=1  
-                AND 
-                    plog.is_writeoff=TRUE
-                AND 
-                    log.is_writeoff=TRUE
-                AND
-                    saler.id={saler_id}
-                AND 
-                    active.id={active_id}
-        """.format(store_id=store_id, 
-                   saler_id=saler_id, 
-                   active_id=active_id)
-    cur = connection.cursor()
-    cur.execute(sql)
-    item_detail_list = dictfetchall(cur)
-    distribute = models.StoreMoneyDistribution.objects.get(
-        active_id=active_id)
-    for data in item_detail_list:
-        if data.get('is_boss') == True:
-            data['distribute'] = distribute.boss_money 
-        else:
-            data['distribute'] = distribute.saler_money
-        data['phone'] = data['phone'][0:3]+ '****'+ data['phone'][7:]
-    return item_detail_list
-
-
-def get_saler_active(store_id, data_type, saler_id, active_id):
-    if data_type == 'today':
-        today = timezone.now().date()
-        sql = """
-                SELECT 
-                    m.store_id, 
-                    m.active_id, 
-                    count(log.customer_id) AS num,
-                    MAX(active.name) AS active_name,
-                    max(saler.name) AS saler_name,
-                    sum(plog.price) AS price_sum
-                FROM 
-                    shangmi_activestoremap AS m 
-                LEFT JOIN 
-                    shangmi_activelog AS log 
-                ON 
-                    m.id=log.active_map_id 
-                LEFT JOIN 
-                    shangmi_active AS active 
-                ON 
-                    m.active_id=active.id 
-                LEFT JOIN 
-                    shangmi_saler AS saler
-                ON
-                    saler.id=log.saler_id
-                LEFT JOIN
-                    shangmi_customergetpricelog as plog
-                ON
-                    log.customer_get_price_log_id=plog.id
-                WHERE 
-                    m.store_id={store_id}
-                AND 
-                    active.status=1  
-                AND
-                    saler.id={saler_id}
-                AND 
-                    active.id={active_id}
-                AND 
-                    plog.is_writeoff=TRUE
-                AND 
-                    log.is_writeoff=FALSE
-                AND 
-                    log.time::date='{date}'
-                GROUP BY 
-                    m.store_id, m.active_id, log.saler_id;
-            """.format(store_id=store_id, 
-                       date=today, 
-                       saler_id=saler_id, 
-                       active_id=active_id)
-    elif data_type == 'all':
-        sql = """
-                SELECT 
-                    m.store_id, 
-                    m.active_id, 
-                    count(log.customer_id) AS num,
-                    MAX(active.name) AS active_name,
-                    max(saler.name) AS saler_name,
-                    sum(plog.price) AS price_sum
-                FROM 
-                    shangmi_activestoremap AS m 
-                LEFT JOIN 
-                    shangmi_activelog AS log 
-                ON 
-                    m.id=log.active_map_id 
-                LEFT JOIN 
-                    shangmi_active AS active 
-                ON 
-                    m.active_id=active.id 
-                LEFT JOIN 
-                    shangmi_saler AS saler
-                ON
-                    saler.id=log.saler_id
-                LEFT JOIN
-                    shangmi_customergetpricelog as plog
-                ON
-                    log.customer_get_price_log_id=plog.id
-                WHERE 
-                    m.store_id={store_id}
-                AND 
-                    active.status=1  
-                AND 
-                    plog.is_writeoff=TRUE
-                AND 
-                    log.is_writeoff=FALSE
-                AND
-                    saler.id={saler_id}
-                AND 
-                    active.id={active_id}
-                GROUP BY 
-                    m.store_id, m.active_id, log.saler_id;
-        """.format(store_id=store_id, 
-                   saler_id=saler_id, 
-                   active_id=active_id)
-    elif data_type == 'history':
-        sql = """
-                SELECT 
-                    m.store_id, 
-                    m.active_id, 
-                    count(log.customer_id) AS num,
-                    MAX(active.name) AS active_name,
-                    max(saler.name) AS saler_name,
-                    sum(plog.price) AS price_sum
-                FROM 
-                    shangmi_activestoremap AS m 
-                LEFT JOIN 
-                    shangmi_activelog AS log 
-                ON 
-                    m.id=log.active_map_id 
-                LEFT JOIN 
-                    shangmi_active AS active 
-                ON 
-                    m.active_id=active.id 
-                LEFT JOIN 
-                    shangmi_saler AS saler
-                ON
-                    saler.id=log.saler_id
-                LEFT JOIN
-                    shangmi_customergetpricelog as plog
-                ON
-                    log.customer_get_price_log_id=plog.id
-                WHERE 
-                    m.store_id={store_id}
-                AND 
-                    active.status=1  
-                AND 
-                    plog.is_writeoff=TRUE
-                AND 
-                    log.is_writeoff=TRUE
-                AND
-                    saler.id={saler_id}
-                AND 
-                    active.id={active_id}
-                GROUP BY 
-                    m.store_id, m.active_id, log.saler_id;
-        """.format(store_id=store_id, 
-                   saler_id=saler_id, 
-                   active_id=active_id)
-    cur = connection.cursor()
-    cur.execute(sql)
-    item_detail_list = dictfetchall(cur)
-    return item_detail_list
-
-def get_boss_money(store_id):
-    sql = """
-        SELECT 
-                m.store_id, 
-                m.active_id, 
-                log.customer_id,
-                active.name AS active_name,
-                saler.name AS saler_name,
-                saler.is_boss AS is_boss,
-                plog.price AS price_sum,
-                to_char(log.time, 'YYYY-MM-DD HH24:MI:SS') AS time
-            FROM 
-                shangmi_activestoremap AS m 
-            LEFT JOIN 
-                shangmi_activelog AS log 
-            ON 
-                m.id=log.active_map_id 
-            LEFT JOIN 
-                shangmi_active AS active 
-            ON 
-                m.active_id=active.id 
-            LEFT JOIN 
-                shangmi_saler AS saler
-            ON
-                saler.id=log.saler_id
-            LEFT JOIN
-                shangmi_customergetpricelog as plog
-            ON
-                log.customer_get_price_log_id=plog.id
-            WHERE 
-                m.store_id={store_id}
-            AND 
-                active.status=1  
-            AND 
-                plog.is_writeoff=TRUE
-            AND 
-                log.is_writeoff=FALSE;
-    """.format(store_id=store_id)
-    cur = connection.cursor()
-    cur.execute(sql)
-    active_list = dictfetchall(cur)
-    money_sum = 0
-    advance_sum = 0
-    for i in active_list:
-        active_id = int(i.get('active_id'))
-        distribute = models.StoreMoneyDistribution.objects.get(
-        active_id=active_id)
-        if i.get('is_boss') == True:
-            money_sum += distribute.boss_money  
-        else:
-            money_sum += distribute.boss_distribute_money
-        advance_sum += i['price_sum']
-    return {'data': {'money_sum': money_sum, 'advance_sum': advance_sum}}
-
-
-def get_saler_money(store_id, saler_id):
-    sql = """
-        SELECT 
-                m.store_id, 
-                m.active_id, 
-                log.customer_id,
-                active.name AS active_name,
-                saler.name AS saler_name,
-                saler.is_boss AS is_boss,
-                plog.price AS price_sum,
-                to_char(log.time, 'YYYY-MM-DD HH24:MI:SS') AS time
-            FROM 
-                shangmi_activestoremap AS m 
-            LEFT JOIN 
-                shangmi_activelog AS log 
-            ON 
-                m.id=log.active_map_id 
-            LEFT JOIN 
-                shangmi_active AS active 
-            ON 
-                m.active_id=active.id 
-            LEFT JOIN 
-                shangmi_saler AS saler
-            ON
-                saler.id=log.saler_id
-            LEFT JOIN
-                shangmi_customergetpricelog as plog
-            ON
-                log.customer_get_price_log_id=plog.id
-            WHERE 
-                m.store_id={store_id}
-            AND 
-                active.status=1  
-            AND
-                saler.id={saler_id}
-            AND 
-                plog.is_writeoff=TRUE
-            AND 
-                log.is_writeoff=FALSE;
-    """.format(store_id=store_id, saler_id=saler_id)
-    cur = connection.cursor()
-    cur.execute(sql)
-    active_list = dictfetchall(cur)
-    money_sum = 0
-    advance_sum = 0
-    for i in active_list:
-        active_id = int(i.get('active_id'))
-        distribute = models.StoreMoneyDistribution.objects.get(
-        active_id=active_id)
-        if i.get('is_boss') == True:
-            money_sum += distribute.boss_money  
-        else:
-            money_sum += distribute.boss_distribute_money
-        advance_sum += i['price_sum']
-    return {'data': {'money_sum': money_sum, 'advance_sum': advance_sum}}
-
-
-
-def get_boss_records_detail(store_id):
-    sql = """
-            SELECT 
-                m.store_id, 
-                m.active_id, 
-                log.customer_id,
-                u.phone,
-                active.name AS active_name,
-                saler.name AS saler_name,
-                saler.is_boss AS is_boss,
-                to_char(log.time, 'YYYY-MM-DD HH24:MI:SS') AS time,
-                plog.price AS price_sum
-            FROM 
-                shangmi_activestoremap AS m 
-            LEFT JOIN 
-                shangmi_activelog AS log 
-            ON 
-                m.id=log.active_map_id 
-            LEFT JOIN 
-                shangmi_active AS active 
-            ON 
-                m.active_id=active.id 
-            LEFT JOIN 
-                shangmi_saler AS saler
-            ON
-                saler.id=log.saler_id
-            LEFT JOIN
-                shangmi_customergetpricelog as plog
-            ON
-                log.customer_get_price_log_id=plog.id
-            LEFT JOIN 
-                shangmi_user AS u
-            ON
-                plog.customer_id=u.id
-            WHERE 
-                m.store_id={store_id}
-            AND 
-                active.status=1  
-            AND 
-                plog.is_writeoff=TRUE
-            AND 
-                log.is_writeoff=FALSE
-            ORDER BY
-                active.id;
-    """.format(store_id=store_id)
-    cur = connection.cursor()
-    cur.execute(sql)
-    active_list = dictfetchall(cur)
-    # money_sum = 0
-    # advance_sum = 0
-    for i in active_list:
-        active_id = int(i.get('active_id'))
-        i['phone'] = i['phone'][0:3]+ '****'+ i['phone'][7:]
-        distribute = models.StoreMoneyDistribution.objects.get(
-        active_id=active_id)
-        if i.get('is_boss') == True:
-            i['distribute'] = distribute.boss_money  
-        else:
-            i['distribute'] = distribute.boss_distribute_money
-    #     advance_sum += i['price_sum']
-    return {'data': active_list}
-
-
-def get_store_active_log(store_id, data_type):
-    if data_type == 'today':
-        today = timezone.now().date()
-        sql = """
-                SELECT 
-                    m.store_id, 
-                    m.active_id, 
-                    u.phone,
-                    to_char(log.time, 'YYYY-MM-DD HH24:MI:SS') AS time,
-                    active.name AS active_name,
-                    saler.name AS saler_name,
-                    plog.price AS price_sum,
-                    saler.is_boss
-                FROM 
-                    shangmi_activestoremap AS m 
-                LEFT JOIN 
-                    shangmi_activelog AS log 
-                ON 
-                    m.id=log.active_map_id 
-                LEFT JOIN 
-                    shangmi_active AS active 
-                ON 
-                    m.active_id=active.id 
-                LEFT JOIN 
-                    shangmi_saler AS saler
-                ON
-                    saler.id=log.saler_id
-                LEFT JOIN
-                    shangmi_customergetpricelog as plog
-                ON
-                    log.customer_get_price_log_id=plog.id
-                LEFT JOIN 
-                    shangmi_user AS u
-                ON
-                    plog.customer_id=u.id
-                WHERE 
-                    m.store_id={store_id}
-                AND 
-                    active.status=1  
-                AND 
-                    log.is_writeoff=FALSE
-                AND 
-                    log.time::date='{date}'
-                AND 
-                    plog.is_writeoff=TRUE;
-            """.format(store_id=store_id, date=today)
-    elif data_type == 'all':
-        sql = """
-                SELECT 
-                    m.store_id, 
-                    m.active_id, 
-                    u.phone,
-                    to_char(log.time, 'YYYY-MM-DD HH24:MI:SS') AS time,
-                    active.name AS active_name,
-                    saler.name AS saler_name,
-                    plog.price AS price_sum,
-                    saler.is_boss
-                FROM 
-                    shangmi_activestoremap AS m 
-                LEFT JOIN 
-                    shangmi_activelog AS log 
-                ON 
-                    m.id=log.active_map_id 
-                LEFT JOIN 
-                    shangmi_active AS active 
-                ON 
-                    m.active_id=active.id 
-                LEFT JOIN 
-                    shangmi_saler AS saler
-                ON
-                    saler.id=log.saler_id
-                LEFT JOIN
-                    shangmi_customergetpricelog as plog
-                ON
-                    log.customer_get_price_log_id=plog.id
-                LEFT JOIN 
-                    shangmi_user AS u
-                ON
-                    plog.customer_id=u.id
-                WHERE 
-                    m.store_id={store_id}
-                AND 
-                    active.status=1  
-                AND 
-                    plog.is_writeoff=TRUE
-                AND 
-                    log.is_writeoff=FALSE;
-        """.format(store_id=store_id)
-    elif data_type == 'history':
-        sql = """
-                SELECT 
-                    m.store_id, 
-                    m.active_id, 
-                    u.phone,
-                    to_char(log.time, 'YYYY-MM-DD HH24:MI:SS') AS time,
-                    active.name AS active_name,
-                    saler.name AS saler_name,
-                    plog.price AS price_sum,
-                    saler.is_boss
-                FROM 
-                    shangmi_activestoremap AS m 
-                LEFT JOIN 
-                    shangmi_activelog AS log 
-                ON 
-                    m.id=log.active_map_id 
-                LEFT JOIN 
-                    shangmi_active AS active 
-                ON 
-                    m.active_id=active.id 
-                LEFT JOIN 
-                    shangmi_saler AS saler
-                ON
-                    saler.id=log.saler_id
-                LEFT JOIN
-                    shangmi_customergetpricelog as plog
-                ON
-                    log.customer_get_price_log_id=plog.id
-                LEFT JOIN 
-                    shangmi_user AS u
-                ON
-                    plog.customer_id=u.id
-                WHERE 
-                    m.store_id={store_id}
-                AND 
-                    active.status=1  
-                AND 
-                    log.is_writeoff=TRUE
-                AND 
-                    plog.is_writeoff=TRUE
-            ;
-        """.format(store_id=store_id)
-    else:
-        return []
-    cur = connection.cursor()
-    cur.execute(sql)
-    item_detail_list = dictfetchall(cur)
-    # distribute = models.StoreMoneyDistribution.objects.get(
-    #     active_id=active_id)
-    # for data in item_detail_list:
-    #     if data.get('is_boss') == True:
-    #         data['distribute'] = distribute.boss_money 
-    #     else:
-    #         data['distribute'] = distribute.boss_distribute_money
-    #     data['phone'] = data['phone'][0:3]+ '****'+ data['phone'][7:]
-    return item_detail_list
-
-def get_saler_records_detail(store_id, saler_id):
-    sql = """
-        SELECT 
-                m.store_id, 
-                m.active_id, 
-                log.customer_id,
-                u.phone,
-                active.name AS active_name,
-                saler.name AS saler_name,
-                saler.is_boss AS is_boss,
-                to_char(log.time, 'YYYY-MM-DD HH24:MI:SS') AS time,
-                plog.price AS price_sum
-            FROM 
-                shangmi_activestoremap AS m 
-            LEFT JOIN 
-                shangmi_activelog AS log 
-            ON 
-                m.id=log.active_map_id 
-            LEFT JOIN 
-                shangmi_active AS active 
-            ON 
-                m.active_id=active.id 
-            LEFT JOIN 
-                shangmi_saler AS saler
-            ON
-                saler.id=log.saler_id
-            LEFT JOIN
-                shangmi_customergetpricelog as plog
-            ON
-                log.customer_get_price_log_id=plog.id
-            LEFT JOIN 
-                shangmi_user AS u
-            ON
-                plog.customer_id=u.id
-            WHERE 
-                m.store_id={store_id}
-            AND 
-                active.status=1  
-            AND
-                saler.id={saler_id}
-            AND 
-                plog.is_writeoff=TRUE
-            AND 
-                log.is_writeoff=FALSE
-            ORDER BY
-                active.id;
-    """.format(store_id=store_id, saler_id=saler_id)
-    cur = connection.cursor()
-    cur.execute(sql)
-    active_list = dictfetchall(cur)
-    # money_sum = 0
-    # advance_sum = 0
-    for i in active_list:
-        active_id = int(i.get('active_id'))
-        i['phone'] = i['phone'][0:3]+ '****'+ i['phone'][7:]
-        distribute = models.StoreMoneyDistribution.objects.get(
-        active_id=active_id)
-        if i.get('is_boss') == True:
-            i['distribute'] = distribute.boss_money  
-        else:
-            i['distribute'] = distribute.boss_distribute_money
-    #     advance_sum += i['price_sum']
-    return {'data': active_list}
+            retry += 1

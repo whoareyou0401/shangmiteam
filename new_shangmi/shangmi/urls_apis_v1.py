@@ -12,5 +12,8 @@ urlpatterns = [
     url(r"^join$", JoinActiveAPI.as_view()),
     url(r"^active-qr$", QrcodeAPI.as_view()),
     url(r"^store$", StoreAPI.as_view()),
-    url(r"^get-money-history$", UserGetMoneyLogAPI.as_view())
+    url(r"^get-money-history$", UserGetMoneyLogAPI.as_view()),
+    url(r"^store-join$", JoinStoreActiveAPI.as_view()),
+    url(r"^test$", test),
+    url(r"^store/actives$", StoreActive.as_view())
 ]

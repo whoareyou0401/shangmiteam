@@ -25,7 +25,30 @@ class ShangmiUser(models.Model):
         max_length=255,
         null=True
     )
-
+    union_id = models.CharField(
+        max_length=255,
+        null=True,
+        verbose_name="联合主键"
+    )
+    gz_openid = models.CharField(
+        max_length=255,
+        null=True,
+        verbose_name="公众号openid"
+    )
+    lat = models.DecimalField(
+        decimal_places=15,
+        max_digits=30,
+        null=True,
+        verbose_name="纬度"
+    )
+    lng = models.DecimalField(
+        decimal_places=15,
+        max_digits=30,
+        null=True,
+        verbose_name="经度"
+    )
+    class Meta:
+        verbose_name="用户数据"
 
 class Balance(models.Model):
     money = models.DecimalField(
@@ -173,7 +196,29 @@ class Active(models.Model):
         default=0,
         verbose_name="活动总量"
     )
-
+    lat = models.DecimalField(
+        decimal_places=15,
+        max_digits=30,
+        null=True,
+        verbose_name="纬度"
+    )
+    lng = models.DecimalField(
+        decimal_places=15,
+        max_digits=30,
+        null=True,
+        verbose_name="经度"
+    )
+    range = models.FloatField(
+        verbose_name="活动允许范围km",
+        default=3
+    )
+    detail_url = models.CharField(
+        max_length=255,
+        null=True,
+        verbose_name="详情页跳转"
+    )
+    def __str__(self):
+        return self.name
     class Meta:
         verbose_name = "活动表"
 
@@ -231,6 +276,10 @@ class UserPayLog(models.Model):
         verbose_name="支付状态",
         default=0
     )
+    prepay_id = models.CharField(
+        max_length=255,
+        null=True
+    )
     class Meta:
         verbose_name = "用户付款表"
         index_together = ["user", "store"]
@@ -285,10 +334,10 @@ class UserRecharge(models.Model):
         verbose_name="微信支付订单号"
     )
     class Meta:
-        verbose_name="用户充值"
+        verbose_name="门店用户充值"
 
 class StoreActiveBalance(models.Model):
-    store = models.ForeignKey(
+    store = models.OneToOneField(
         Store,
         verbose_name="门店"
     )

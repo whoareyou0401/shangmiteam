@@ -12,6 +12,7 @@ from django.conf import settings
 from .pay_util import *
 from .models import *
 import xmltodict
+from .utils import send_template_msg
 
 user_cache = caches['user']
 class OrderAPI(View):
@@ -86,6 +87,7 @@ class OrderAPI(View):
         }
         return JsonResponse(data)
 
+# 消费者支付接口
 class pay_unifiedorder(View):
 
 
@@ -119,8 +121,8 @@ class pay_unifiedorder(View):
         # data['fee_type'] = 'CNY'
         data['openid'] = user.openid
         data['out_trade_no'] = out_trade_no
-        # data['notify_url'] = 'http://sharemsg.cn:12348/shangmi/api/v1/pay/notify'
-        data['notify_url'] = 'https://sharemsg.cn/shangmi/api/v1/pay/notify'
+        data['notify_url'] = 'http://sharemsg.cn:12348/shangmi/api/v1/pay/notify'
+        # data['notify_url'] = 'https://sharemsg.cn/shangmi/api/v1/pay/notify'
         data['appid'] = settings.PAY_APPID
         data['trade_type'] = 'JSAPI'
         data['sign'] = sign(data, settings.PAY_KEY)
@@ -143,10 +145,11 @@ class pay_unifiedorder(View):
         headers = {'Content-Type': 'application/xml'}
         raw = requests.post(url, data=content, headers=headers)
         rdict = xml_response_to_dict(raw)
-        # print('=------',rdict, '--------------')
         return_data = {}
         if rdict['return_code'] == 'SUCCESS' and rdict['result_code'] == 'SUCCESS':
             randuuid = uuid.uuid4()
+            log.prepay_id = rdict['prepay_id']
+            log.save()
             nonce_str = str(randuuid).replace('-', '')
             time_stamp = str(int(time.time()))
             sign_data = {}
@@ -166,7 +169,7 @@ class pay_unifiedorder(View):
         else:
             return JsonResponse({'code': 1, 'data': u'支付失败'})
 
-
+# 消费者消息回调接口
 class PayNotifyAPI(View):
 
     def post(self, request):
@@ -181,9 +184,6 @@ class PayNotifyAPI(View):
             # order_id = cache.get()
             log = UserPayLog.objects.get(wx_pay_num=resp.get('out_trade_no'))
             # log.wx_pay_num = resp.get('out_trade_no')
-
-
-
             if resp.get('appid') == settings.PAY_APPID \
                     and resp.get('mch_id') == settings.MCHID \
                     and float(resp.get('total_fee')) == log.money:
@@ -191,6 +191,7 @@ class PayNotifyAPI(View):
                 log.store.boss.balance.money = log.store.boss.balance.money + log.money  + log.integral + log.integral
                 log.save()
                 log.store.boss.balance.save()
+                send_template_msg(log.user.openid,log, log.prepay_id )
                 data['return_code'] = 'SUCCESS'
                 data['return_msg'] = 'OK'
             else:
@@ -209,6 +210,7 @@ class PayNotifyAPI(View):
         content = template.format(**data)
         return HttpResponse(content, content_type='application/xml')
 
+# m门店提现
 class StoreGetMoneyAPI(View):
     def post(self, req):
         user = ShangmiUser.objects.get(pk=int(user_cache.get(
@@ -324,18 +326,25 @@ class StoreGetMoneyAPI(View):
             }
         return JsonResponse(data)
 
+# 用户提现
 class UserGetMoneyAPI(View):
     def post(self, req):
         user = ShangmiUser.objects.get(pk=int(user_cache.get(
             req.POST.get("token")
         )))
+        if user.id not in [1,3,4]:
+            data = {
+                "code": 2,
+                "msg": "暂时对您不开放"
+            }
+            return JsonResponse(data)
         params = req.POST
         # store = user.store_set.all()[0]
         money = float(params.get('money'))
         if money<1:
             data = {
                 "code": 2,
-                "data": "提现金额不能小于1元"
+                "msg": "提现金额不能小于1元"
             }
             return JsonResponse(data)
         # 检查是否超过体现次数
@@ -434,17 +443,17 @@ class UserGetMoneyAPI(View):
             data["data"] = {"current_money": current_money-money}
         elif rdict.get("return_code") == "SUCCESS" and rdict.get("err_code") == "SENDNUM_LIMIT":
             data = {
-                "data": "提现次数过多",
+                "msg": "提现次数过多",
                 "code": 1
             }
         else:
             data = {
-                "data":"提现失败",
+                "msg":"今日已不可提现",
                 "code":1
             }
         return JsonResponse(data)
 
-
+# 门店充值API
 class StoreRechargeAPI(View):
 
 
@@ -529,7 +538,7 @@ class StoreRechargeAPI(View):
         else:
             return JsonResponse({'code': 1, 'data': u'支付失败'})
 
-
+# 门店支付回调接口
 class StorePayNotifyAPI(View):
 
     def post(self, request):

@@ -239,3 +239,14 @@ PAY_APPID = "wx8b50ab8fa813a49e"
 IMPORTTANT_URL="https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers"
 WEIXIN_PAY_CERT_PATH = os.path.join(BASE_DIR, "pay_cert", "1357996702_20181006_cert.pem")
 WEIXIN_PAY_CERT_KEY_PATH = os.path.join(BASE_DIR, "pay_cert", "1357996702_20181006_key.pem")
+
+# 模板消息服务通知
+GET_MONEY_TEMPLTAE_URL = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send"
+GET_MONEY_TEMPLTAE_ID = os.environ.get("TEMPLATE_ID")
+
+endpoint = 'https://shangmi.oss-cn-beijing.aliyuncs.com'
+OSS_ACCESS_KEY_ID = os.environ.get("OSS_ACCESS_KEY_ID")# 'LTAIXPTosazV9jSq'
+OSS_ACCESS_KEY_SECRET = os.environ.get("OSS_ACCESS_KEY_SECRET")#'7uXYe15rjLzEjStAwVraExvAWFkxIw'
+bucket_name = 'shangmi'
+bucket_name_host = "shangmi.oss-cn-shanghai.aliyuncs.com/apps/"
+# https://shangmi.oss-cn-beijing.aliyuncs.com/apps/active1adv.png
