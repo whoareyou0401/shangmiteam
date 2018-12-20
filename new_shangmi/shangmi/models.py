@@ -47,6 +47,8 @@ class ShangmiUser(models.Model):
         null=True,
         verbose_name="经度"
     )
+    def __str__(self):
+        return self.nick_name
     class Meta:
         verbose_name="用户数据"
 
@@ -120,6 +122,10 @@ class Store(models.Model):
         default=True,
         verbose_name="是否接收通知"
     )
+    def __str__(self):
+        return self.name
+    class Meta:
+        verbose_name="门店"
 
 class GetMoneyLog(models.Model):
     user = models.ForeignKey(
