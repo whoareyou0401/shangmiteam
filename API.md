@@ -27,3 +27,22 @@ url:"api/v1/shangmi/active"
 | icon | string | 活动logo  |
 | desc | string | 活动的简短描述 |
 
+## 2 消费者参加活动记录
+
+url: "api/v1/shangmi/user_active_log"
+
+请求方式：GET
+
+参数：
+
+​	token 用户的token
+
+逻辑：
+
+​	根据用户id搜索对应的数据，按照时间字段降序排列
+
+返回数据：
+
+```
+UserActiveLog的全部字段数据
+```

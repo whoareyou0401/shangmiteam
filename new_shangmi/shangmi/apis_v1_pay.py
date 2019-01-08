@@ -13,8 +13,9 @@ from .pay_util import *
 from .models import *
 import xmltodict
 from .utils import send_template_msg
-
+import redis
 user_cache = caches['user']
+client = redis.StrictRedis(db=8)
 class OrderAPI(View):
 
     def post(self, req):
@@ -46,6 +47,11 @@ class OrderAPI(View):
                 store_balance = Balance.objects.get_or_create(
                     user=store.boss
                 )[0]
+                data = {
+                    "sid": store.id,
+                    "money": "%.2f" % (money/100)
+                }
+                client.publish("buy", json.dumps(data))
                 # 店长余额等于 商户付的钱 加 客户使用的积分
                 store_balance.money = float(store_balance.money) + money + money
                 store_balance.save()
@@ -121,8 +127,8 @@ class pay_unifiedorder(View):
         # data['fee_type'] = 'CNY'
         data['openid'] = user.openid
         data['out_trade_no'] = out_trade_no
-        data['notify_url'] = 'http://sharemsg.cn:12348/shangmi/api/v1/pay/notify'
-        # data['notify_url'] = 'https://sharemsg.cn/shangmi/api/v1/pay/notify'
+        # data['notify_url'] = 'http://sharemsg.cn:12348/shangmi/api/v1/pay/notify'
+        data['notify_url'] = 'https://sharemsg.cn/shangmi/api/v1/pay/notify'
         data['appid'] = settings.PAY_APPID
         data['trade_type'] = 'JSAPI'
         data['sign'] = sign(data, settings.PAY_KEY)
@@ -191,7 +197,12 @@ class PayNotifyAPI(View):
                 log.store.boss.balance.money = log.store.boss.balance.money + log.money  + log.integral + log.integral
                 log.save()
                 log.store.boss.balance.save()
-                send_template_msg(log.user.openid,log, log.prepay_id )
+                data = {
+                    "sid": log.store.id,
+                    "money": round((log.money + log.integral)/100, 1)
+                }
+                client.publish("buy", json.dumps(data))
+                # send_template_msg(log.user.openid,log, log.prepay_id )
                 data['return_code'] = 'SUCCESS'
                 data['return_msg'] = 'OK'
             else:

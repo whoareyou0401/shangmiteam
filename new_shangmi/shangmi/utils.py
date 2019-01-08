@@ -17,9 +17,22 @@ import json
 import os
 from django.core.mail import send_mail
 from math import radians, cos, sin, asin, sqrt
-
+from aip import AipSpeech
 user_cache = caches['user']
 
+def get_voice(text):
+    APP_ID = '15347392'
+    API_KEY = 'fkKUIHIFeqNSlSBjHpyNe47u'
+    SECRET_KEY = 'QC7dRS1c4gmMi1wZd2lPk8zHOjkPGcQq'
+
+    client = AipSpeech(APP_ID, API_KEY, SECRET_KEY)
+    result = client.synthesis(text=text, options={'vol': 8})
+    return result
+    # if not isinstance(result, dict):
+    #     with open('audio.mp3', 'wb') as f:
+    #         f.write(result)
+    # else:
+    #     print(result)
 
 
 # 九堡30.307717 120.266319

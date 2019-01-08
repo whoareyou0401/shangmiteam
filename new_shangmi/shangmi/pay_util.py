@@ -16,9 +16,7 @@ def get_local_ip():
 def sign(params, sign_key):
     params = [(str(key), str(val)) for key, val in params.items() if val]
     sorted_params_string = '&'.join('='.join(pair) for pair in sorted(params))
-    # print(sorted_params_string)
     sign_str = "{}&key={}".format(sorted_params_string, sign_key).encode("utf-8")
-    print("---", sign_str)
     md5 = hashlib.md5()
     md5.update(sign_str)
     return md5.hexdigest().upper()

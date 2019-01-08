@@ -24,3 +24,4 @@ class StoreAdmin(admin.ModelAdmin):
 admin.site.register(Active, ActiveAdmin)
 admin.site.register(Store, StoreAdmin)
 admin.site.register(ShangmiUser, UserAdmin)
+admin.site.register(ActiveStoreMap)

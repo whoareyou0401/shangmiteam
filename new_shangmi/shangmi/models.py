@@ -3,6 +3,14 @@ from django.views import View
 
 from .choices import *
 # Create your models here.
+
+
+ACTIVE_STATUS = (
+    (0, "审核中"),
+    (1, "审核通过"),
+    (2, "审核失败")
+)
+
 class ShangmiUser(models.Model):
     openid = models.CharField(
         max_length=255,
@@ -292,6 +300,10 @@ class UserPayLog(models.Model):
 
 
 class UserActiveLog(models.Model):
+    INTEGRAL_TYPE = (
+        ("join", "直接参加"),
+        ("share", "分享获得")
+    )
     user = models.ForeignKey(
         ShangmiUser
     )

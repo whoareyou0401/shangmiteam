@@ -33,9 +33,9 @@ class LoginAPI(View):
         mini_type = params.get('mini_type')
         token = params.get("token")
         user_id = user_cache.get(token)
-        # if user_id:
-        #     user_cache.set(token, user_id, settings.LOGIN_TIMEOUT)
-        #     return JsonResponse({'code': 0, 'data': {'token': token, "uid": user_id}})
+        if user_id:
+            user_cache.set(token, user_id, settings.LOGIN_TIMEOUT)
+            return JsonResponse({'code': 0, 'data': {'token': token, "uid": user_id}})
         if mini_type == 'background':
             appid = 'wx4a8c99d5d8b43556'
             secret = '014ad578b31357e53b61b9ab69db0761'
@@ -92,7 +92,7 @@ class ActivesAPI(View):
             if i.need_num == 0:
                 tmp["percent"] = "0%"
             else:
-                tmp["percent"] = (i.complete_num / i.need_num) * 100
+                tmp["percent"] = round((i.complete_num / i.need_num) * 100, 2)
             fast_data.append(tmp)
         unfast_data = []
         for i in unfast:
@@ -100,7 +100,7 @@ class ActivesAPI(View):
             if i.need_num == 0:
                 tmp["percent"] = "0%"
             else:
-                tmp["percent"] = (i.complete_num / i.need_num) * 100
+                tmp["percent"] = round((i.complete_num / i.need_num), 2) * 100
             unfast_data.append(tmp)
         result = {
             "code": 1,
@@ -123,7 +123,8 @@ class AdvAPI(View):
         data = {
             "code":1,
             "msg": "ok",
-            "data": res
+            "data": res,
+            "hint": "领钱"
         }
         return JsonResponse(data)
 
@@ -159,7 +160,9 @@ class IndexAPI(View):
                 'money': '%.2f' % (money / 100),
                 'doing_count': doing_count,
                 'finish_count': finish_count,
-                "today": today
+                "today": today,
+                "is_show": True,
+                "is_show_tixian": True
             }
         }
         return JsonResponse(data)
@@ -765,8 +768,28 @@ class StoreSendMoneyHistoryAPI(View):
             )
         )
         store = user.store_set.all().first()
-#         获取时间 临朐人 领取方式
-        logs = User
+        maps = store.activestoremap_set.all()
+        actives = [i.active.id for i in maps]
+        logs = UserActiveLog.objects.filter(active_id__in=actives)
+        datas = []
+        for i in logs:
+            tmp = model_to_dict(i)
+            time_str = i.create_time.strftime("%Y年%m月%d日 %H:%M:%S")
+            tmp["date"] = time_str.split(" ")[0]
+
+            tmp['time'] = time_str.split(" ")[-1]
+            tmp["create_time"] = time_str
+            tmp["type"] = i.get_type_display()
+            tmp["status"] = i.get_status_display()
+            tmp["active_name"] = i.active.name
+            datas.append(tmp)
+        ac_data = sorted(datas, key=lambda dic: dic["create_time"], reverse=True)
+        data = {
+            "code": 0,
+            "data": ac_data
+        }
+        return JsonResponse(data)
+#         获取时间 领取人 领取方式
 def test(req):
     # openid = "oKVGo5aJ3r5hE_dl-y-dBcde683s"
     # cus_name = "超遍历"
@@ -774,7 +797,11 @@ def test(req):
     # order_id = "89347528934718"
     # send_template_msg(openid, cus_name, money, order_id)
     # from .utils import haversine
-    print(haversine(120.266319, 30.307717, 120.264190000000000, 30.305400000000000))
-    return JsonResponse({"data":"ok"})
+    # print(haversine(120.266319, 30.307717, 120.264190000000000, 30.305400000000000))
+    from io import BytesIO
+    text = req.GET.get("text")
+    res = get_voice(text)
+    data = BytesIO(res)
+    return HttpResponse(data.getvalue(), content_type="audio/mp3")
 
 
