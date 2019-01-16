@@ -114,7 +114,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+# 注意：不要更改
+REGION = "cn-hangzhou"
+PRODUCT_NAME = "Dysmsapi"
+DOMAIN = "dysmsapi.aliyuncs.com"
+SMS_ACCESS_KEY_ID = os.environ.get("SMS_ACCESS_KEY_ID")
+SMS_ACCESS_KEY_SECRET = os.environ.get("SMS_ACCESS_KEY_SECRET")
+SMS_TEMPLATE_ID = os.environ.get("SMS_TEMPLATE_ID")
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 

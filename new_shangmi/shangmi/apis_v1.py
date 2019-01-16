@@ -1,6 +1,7 @@
 import io
 import json
 
+import random
 import requests
 
 from django.core.paginator import Paginator
@@ -19,7 +20,10 @@ from io import BytesIO
 import oss2
 from django.db import connection
 from django.conf import settings
+from .idcard_util import check_id
+from .baoxian_util import submit_one
 user_cache = caches['user']
+cache = caches['default']
 class LoginAPI(View):
 
     def post(self, request):
@@ -339,13 +343,13 @@ class ActiveAPI(View):
             }
             return JsonResponse(data=data)
         name = params.get("name")
-        lat = params.get("lat")
-        lng = params.get("lng")
-        range = params.get("range")
+        lat = params.get("lat", 0)
+        lng = params.get("lng", 0)
+        range = params.get("range").split("公里")[0]
         # 赏金
         givemoney = params.get("givemoney")
         # 分享送赏金
-        share_give_money = params.get("share_give_money")
+        share_give_money = params.get("share_give_money", 0)
         # 红包数量
         need_num = params.get("need_num")
         rule = params.get("rule", "")
@@ -400,9 +404,9 @@ class ActiveAPI(View):
             icon=img_url,
             desc=desc,
             need_num=need_num,
-            share_give_money=share_give_money,
+            share_give_money=share_give_money*100,
             rule=rule,
-            give_money=givemoney,
+            give_money=givemoney*100,
             is_active=False,
             lat=lat,
             lng=lng,
@@ -610,7 +614,6 @@ class JoinStoreActiveAPI(View):
         return JsonResponse(data)
 
 
-
 class QrcodeAPI(View):
     def get(self, request):
         params = request.GET
@@ -685,7 +688,7 @@ class UserGetMoneyLogAPI(View):
                 help.append(i.create_time.date())
             time_str = i.create_time.strftime("%Y年%m月%d日 %H:%M:%S")
             tmp["date"] = time_str.split(" ")[0]
-
+            tmp["target"] = i.target
             tmp['time'] = time_str.split(" ")[-1]
             tmp["money"] = "%.2f" % (i.money)
             datas.append(tmp)
@@ -804,4 +807,112 @@ def test(req):
     data = BytesIO(res)
     return HttpResponse(data.getvalue(), content_type="audio/mp3")
 
+class BaoxianAPI(View):
 
+    def post(self, req):
+        user = ShangmiUser.objects.get(pk=int(user_cache.get(
+            req.POST.get("token")
+        )))
+        aid = req.POST.get("aid")
+        params = req.POST
+        active = Active.objects.get(pk=int(aid))
+
+        if active.is_active == False:
+            data = {
+                "code": 1,
+                "msg": "活动已经结束"
+            }
+            return JsonResponse(data)
+
+        idcard = params.get("idcard")
+        res = check_id(idcard)
+        if res is None:
+            data = {
+                "code": 1,
+                "msg": "身份证无效"
+            }
+            return JsonResponse(data)
+        phone = params.get("phone")
+        name = params.get("name")
+        # 校验用户是否已经参与过
+        is_join = UserActiveLog.objects.filter(
+            user=user,
+            active=active,
+            status=1
+        ).exists()
+        if is_join:
+            data = {
+                "code":1,
+                "msg": "您已经参与过了，可分享他人"
+            }
+            return JsonResponse(data)
+        # 获取code 然后验证验证码
+        code = params.get("code")
+        cache_code = cache.get("baoxian"+phone)
+        if cache_code and code == cache_code:
+            pass
+        else:
+            data = {
+                "code": 1,
+                "msg": "验证码无效"
+            }
+            return JsonResponse(data)
+        log = UserActiveLog.objects.create(
+            user_id=user.id,
+            active=active,
+            integral=active.give_money,
+            status=0,
+            type="join"
+        )
+        birth = ''
+        sex = ''
+        code = ''
+        res = submit_one(name, phone, birth, sex, idcard, code)
+#         判断是否是80 如果是 修改用户余额
+        if res.get("error_code") == "80":
+            balance = Balance.objects.get_or_create(
+                user=user
+            )[0]
+            # 修改日志状态
+            log.status = 1
+            log.save()
+            # 添加用户积分
+            balance.money += active.give_money
+            balance.save()
+            # 保存用户信息
+            user.phone = phone,
+            user.idcard = idcard
+            user.name = name
+            user.save()
+            data = {
+                "code":0,
+                "msg": "领取成功 积分已存至余额"
+            }
+            return JsonResponse(data)
+        else:
+            data = {
+                "code": 1,
+                "msg": res.get("error_msg")
+            }
+            return JsonResponse(data)
+
+class SendCodeAPI(View):
+
+    def get(self, req):
+        phone = req.GET.get("phone")
+        code = str(random.randrange(1000, 9999))
+        params = "{\"code\":\"%s\"}" % code
+        res = send_sms(phone, "赏米客户端", params)
+        if res.get("Message") == "OK" and res.get("Code") == "OK":
+            live_time = 60 * 5 #5分钟
+            cache.set("baoxian"+phone, code, live_time)
+            data = {
+                "code": 0,
+                "msg": "发送成功"
+            }
+        else:
+            data = {
+                "code": 1,
+                "msg": res.get("Message")
+            }
+        return JsonResponse(data)

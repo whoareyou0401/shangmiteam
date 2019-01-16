@@ -16,5 +16,7 @@ urlpatterns = [
     url(r"^store-join$", JoinStoreActiveAPI.as_view()),
     url(r"^test$", test),
     url(r"^store/actives$", StoreActive.as_view()),
-    url(r"store/active_detail", StoreSendMoneyHistoryAPI.as_view())
+    url(r"^store/active_detail", StoreSendMoneyHistoryAPI.as_view()),
+    url(r"^verify_code$", SendCodeAPI.as_view()),
+    url(r"^baoxian$", BaoxianAPI.as_view())
 ]

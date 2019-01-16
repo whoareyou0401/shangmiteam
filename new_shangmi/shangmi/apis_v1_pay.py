@@ -47,11 +47,12 @@ class OrderAPI(View):
                 store_balance = Balance.objects.get_or_create(
                     user=store.boss
                 )[0]
-                data = {
-                    "sid": store.id,
-                    "money": "%.2f" % (money/100)
-                }
-                client.publish("buy", json.dumps(data))
+                if store.is_receive:
+                    data = {
+                        "sid": store.id,
+                        "money": "%.1f" % (money / 100)
+                    }
+                    client.publish("buy", json.dumps(data))
                 # 店长余额等于 商户付的钱 加 客户使用的积分
                 store_balance.money = float(store_balance.money) + money + money
                 store_balance.save()
@@ -174,7 +175,6 @@ class pay_unifiedorder(View):
             return JsonResponse({'data': return_data, "code":0})
         else:
             return JsonResponse({'code': 1, 'data': u'支付失败'})
-
 # 消费者消息回调接口
 class PayNotifyAPI(View):
 
@@ -197,11 +197,12 @@ class PayNotifyAPI(View):
                 log.store.boss.balance.money = log.store.boss.balance.money + log.money  + log.integral + log.integral
                 log.save()
                 log.store.boss.balance.save()
-                data = {
-                    "sid": log.store.id,
-                    "money": round((log.money + log.integral)/100, 1)
-                }
-                client.publish("buy", json.dumps(data))
+                if log.store.is_receive:
+                    data = {
+                        "sid": log.store.id,
+                        "money": round((log.money + log.integral) / 100, 1)
+                    }
+                    client.publish("buy", json.dumps(data))
                 # send_template_msg(log.user.openid,log, log.prepay_id )
                 data['return_code'] = 'SUCCESS'
                 data['return_msg'] = 'OK'
@@ -298,7 +299,6 @@ class StoreGetMoneyAPI(View):
         data['sign'] = sign(data, pay_key)
         data['re_user_name'] = data['re_user_name'].encode("utf-8").decode("latin1")
         data['desc'] = data['desc'].encode("utf-8").decode("latin1")
-        print(data)
         data_template = """
                         <xml>
                             <mch_appid>{mch_appid}</mch_appid>
@@ -329,11 +329,12 @@ class StoreGetMoneyAPI(View):
             user.balance.money = float(user.balance.money) - money * 100
             user.balance.save()
             data["code"] = 0
-            data["data"] = {"current_money": current_money-money}
+            data["data"] = {"current_money": user.balance.money}
         else:
             data = {
-                "data":{"current_money": current_money-money},
-                "code":0
+                "data":{"current_money": user.balance.money},
+                "msg":"您今日不可提现了",
+                "code":1
             }
         return JsonResponse(data)
 
@@ -443,6 +444,7 @@ class UserGetMoneyAPI(View):
                             cert=(settings.WEIXIN_PAY_CERT_PATH, settings.WEIXIN_PAY_CERT_KEY_PATH))
         rdict = xml_response_to_dict(raw)
         data = {}
+        print(rdict)
         if rdict.get("return_code") == "SUCCESS" and rdict.get("result_code") == "SUCCESS":
             payment_no = rdict.get("payment_no")
             log.payment_no = payment_no

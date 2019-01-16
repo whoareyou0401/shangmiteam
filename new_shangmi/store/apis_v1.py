@@ -1,6 +1,6 @@
 import qrcode
 from django.core.cache import caches
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, QueryDict
 from django.views import View
 import datetime
 from shangmi.models import *
@@ -98,6 +98,10 @@ class BossInfoAPI(View):
         user_info["icon"] = user.icon
         user_info["phone"] = user.store_set.all().first().boss_phone
         user_info["balance"] = round(user.balance.money / 100, 2)
+        store = user.store_set.all()[0] if len(user.store_set.all())>0 else None
+        user_info["store_name"] = store.name if store else ""
+        user_info["store_id"] = store.id if store else "暂无"
+        user_info["receive"] = store.is_receive if store else False
         data = {
             "code": 0,
             "data": user_info
@@ -183,3 +187,22 @@ class StoreIncomeMoneyAPI(View):
         }
         return JsonResponse(data)
 
+class StoreReceiveNotice(View):
+
+    def put(self, req):
+        params = QueryDict(req.body)
+        user = ShangmiUser.objects.get(
+            pk=int(user_cache.get(
+                params.get("token")
+            )
+            )
+        )
+        store = user.store_set.all()[0]
+        store.is_receive = True if params.get("status") == "true" else False
+        store.save()
+        data = {
+            "code": 0,
+            "msg": "ok",
+            "data": "ok"
+        }
+        return JsonResponse(data)

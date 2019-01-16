@@ -3,14 +3,6 @@ from django.views import View
 
 from .choices import *
 # Create your models here.
-
-
-ACTIVE_STATUS = (
-    (0, "审核中"),
-    (1, "审核通过"),
-    (2, "审核失败")
-)
-
 class ShangmiUser(models.Model):
     openid = models.CharField(
         max_length=255,
@@ -54,6 +46,21 @@ class ShangmiUser(models.Model):
         max_digits=30,
         null=True,
         verbose_name="经度"
+    )
+    name = models.CharField(
+        max_length=30,
+        null=True,
+        verbose_name="用户姓名",
+    )
+    idcard = models.CharField(
+        max_length=20,
+        null=True,
+        verbose_name="身份证",
+    )
+    phone = models.CharField(
+        max_length=20,
+        null=True,
+        verbose_name="手机号"
     )
     def __str__(self):
         return self.nick_name
@@ -130,6 +137,10 @@ class Store(models.Model):
         default=True,
         verbose_name="是否接收通知"
     )
+    is_receive =models.BooleanField(
+        default=True,
+        verbose_name="语音通知状态"
+    )
     def __str__(self):
         return self.name
     class Meta:
@@ -160,6 +171,10 @@ class GetMoneyLog(models.Model):
     payment_no = models.CharField(
         max_length=255,
         null=True
+    )
+    target = models.CharField(
+        max_length=50,
+        default="微信零钱"
     )
     class Meta:
         verbose_name = "用户提现表"
@@ -300,10 +315,6 @@ class UserPayLog(models.Model):
 
 
 class UserActiveLog(models.Model):
-    INTEGRAL_TYPE = (
-        ("join", "直接参加"),
-        ("share", "分享获得")
-    )
     user = models.ForeignKey(
         ShangmiUser
     )
