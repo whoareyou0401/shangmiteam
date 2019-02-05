@@ -117,7 +117,20 @@ def req_user(request):
         return None
     return user
 
+def send_my_normal_mail(msg_str):
+    sub = "赏米"
+    recievers = [
+        "wangjia8621@sina.com",
+        "liuda@1000phone.com"
+    ]
 
+    send_mail(
+        sub,
+        msg_str,
+        settings.DEFAULT_FROM_EMAIL,
+        recievers
+    )
+    return "ok"
 
 def send_mymail(store, active_name):
     sub = "赏米"

@@ -18,5 +18,8 @@ urlpatterns = [
     url(r"^store/actives$", StoreActive.as_view()),
     url(r"^store/active_detail", StoreSendMoneyHistoryAPI.as_view()),
     url(r"^verify_code$", SendCodeAPI.as_view()),
-    url(r"^baoxian$", BaoxianAPI.as_view())
+    url(r"^baoxian$", BaoxianAPI.as_view()),
+    url(r"^store/active/status$", StoreCancleActive.as_view()),
+    url(r"^money-index$", TiXianIndex.as_view()),
+    url(r"^check-idcard$", CheckIdCardAPI.as_view())
 ]

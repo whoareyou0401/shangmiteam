@@ -12,7 +12,7 @@ from django.conf import settings
 from .pay_util import *
 from .models import *
 import xmltodict
-from .utils import send_template_msg
+from .utils import send_template_msg, send_my_normal_mail
 import redis
 user_cache = caches['user']
 client = redis.StrictRedis(db=8)
@@ -331,6 +331,8 @@ class StoreGetMoneyAPI(View):
             data["code"] = 0
             data["data"] = {"current_money": user.balance.money}
         else:
+            msg = "门店客户提现 用户id：%s支付问题%s" % (str(user.id), rdict.get("err_code_des"))
+            send_my_normal_mail(msg)
             data = {
                 "data":{"current_money": user.balance.money},
                 "msg":"您今日不可提现了",
@@ -344,12 +346,12 @@ class UserGetMoneyAPI(View):
         user = ShangmiUser.objects.get(pk=int(user_cache.get(
             req.POST.get("token")
         )))
-        if user.id not in [1,3,4]:
-            data = {
-                "code": 2,
-                "msg": "暂时对您不开放"
-            }
-            return JsonResponse(data)
+        # if user.id not in [1,3,4]:
+        #     data = {
+        #         "code": 2,
+        #         "msg": "暂时对您不开放"
+        #     }
+        #     return JsonResponse(data)
         params = req.POST
         # store = user.store_set.all()[0]
         money = float(params.get('money'))
@@ -444,7 +446,7 @@ class UserGetMoneyAPI(View):
                             cert=(settings.WEIXIN_PAY_CERT_PATH, settings.WEIXIN_PAY_CERT_KEY_PATH))
         rdict = xml_response_to_dict(raw)
         data = {}
-        print(rdict)
+
         if rdict.get("return_code") == "SUCCESS" and rdict.get("result_code") == "SUCCESS":
             payment_no = rdict.get("payment_no")
             log.payment_no = payment_no
@@ -453,6 +455,7 @@ class UserGetMoneyAPI(View):
             user.balance.money = float(user.balance.money) - money * 100
             user.balance.save()
             data["code"] = 0
+            data["msg"] = "已提现至微信零钱"
             data["data"] = {"current_money": current_money-money}
         elif rdict.get("return_code") == "SUCCESS" and rdict.get("err_code") == "SENDNUM_LIMIT":
             data = {
@@ -460,6 +463,8 @@ class UserGetMoneyAPI(View):
                 "code": 1
             }
         else:
+            msg = "客户提现 用户id：%s支付问题%s"%(str(user.id),rdict.get("err_code_des"))
+            send_my_normal_mail(msg)
             data = {
                 "msg":"今日已不可提现",
                 "code":1
@@ -574,14 +579,23 @@ class StorePayNotifyAPI(View):
                     and float(resp.get('total_fee')) == log.money * 100:
                 log.is_ok = True
                 log.save()
-                # 门店活动
-                store = log.user.store_set.all()[0]
-                balance = StoreActiveBalance.objects.get_or_create(
-                    store=store
-                )[0]
-                balance.balance += log.money * 100
+                try:
+                    balance = Balance.objects.get(
+                        user_id=log.user.id
+                    )
+                except:
+                    balance = Balance.objects.create(
+                        user_id=log.user.id
+                    )
+                balance.money += log.money * 100
                 balance.save()
-                log.save()
+                # 门店活动
+                # store = log.user.store_set.all()[0]
+                # balance = StoreActiveBalance.objects.get_or_create(
+                #     store=store
+                # )[0]
+                # balance.balance += log.money * 100
+                # balance.save()
                 # log.user.store_set.all()[0].boss.balance.save()
                 data['return_code'] = 'SUCCESS'
                 data['return_msg'] = 'OK'

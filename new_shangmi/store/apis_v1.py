@@ -1,5 +1,6 @@
 import qrcode
 from django.core.cache import caches
+from django.db.models import  Sum
 from django.http import JsonResponse, HttpResponse, QueryDict
 from django.views import View
 import datetime
@@ -19,6 +20,9 @@ class BindStoreAPI(View):
         store = Store.objects.get(boss_phone=phone)
         store.boss=user
         store.is_active = True
+        # 计算免费拓展活动时间
+        free_date = datetime.datetime.now() + datetime.timedelta(days=90)
+        store.free_date = free_date
         store.save()
         data = {
             "code": 0,
@@ -52,12 +56,15 @@ class StoreTodayAPI(View):
         for log in logs:
             money = money + log.integral + log.money
             reward += log.integral
+        persons = logs.values('user_id').annotate(Sum('user_id'))
         data = {
             "code": 0,
             "data":{
                 "amount": round((money+reward) / 100, 2),
                 "reward": round(reward / 100, 2),
-                "money":  round(money / 100, 2)
+                "money":  round(money / 100, 2),
+                "count": logs.count(),
+                "persons": len(persons)
             }
         }
         return JsonResponse(data)

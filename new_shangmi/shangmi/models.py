@@ -141,6 +141,10 @@ class Store(models.Model):
         default=True,
         verbose_name="语音通知状态"
     )
+    free_date = models.DateField(
+        null=True,
+        verbose_name="免费使用到期时间"
+    )
     def __str__(self):
         return self.name
     class Meta:
@@ -184,6 +188,11 @@ class Active(models.Model):
     name = models.CharField(
         max_length=40,
         verbose_name="活动名字"
+    )
+    detail_icon = models.CharField(
+        max_length=255,
+        null=True,
+        verbose_name="详情图片"
     )
     icon = models.CharField(
         max_length=255,
@@ -236,6 +245,11 @@ class Active(models.Model):
         max_digits=30,
         null=True,
         verbose_name="经度"
+    )
+    address = models.CharField(
+        max_length=255,
+        null=True,
+        
     )
     range = models.FloatField(
         verbose_name="活动允许范围km",
@@ -381,3 +395,51 @@ class StoreActiveBalance(models.Model):
     )
 
 
+class Coupon(models.Model):
+    name = models.CharField(
+        max_length=255,
+        verbose_name="优惠券名字"
+    )
+    money = models.IntegerField(
+        verbose_name="优惠券面值"
+    )
+    can_use = models.IntegerField(
+        verbose_name="使用条件"
+    )
+    store = models.ForeignKey(
+        Store,
+        verbose_name="关联的门店"
+    )
+    create_time = models.DateTimeField(
+        auto_now_add=True
+    )
+    over_time = models.DateField(
+        null=True,
+        verbose_name="优惠券领取结束时间"
+    )
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="是否活跃"
+    )
+    desc = models.CharField(
+        max_length=255,
+        verbose_name="积分描述"
+    )
+    class Meta:
+        verbose_name = "门店积分券"
+
+class UserGetCoupon(models.Model):
+
+    user = models.ForeignKey(
+        ShangmiUser,
+        verbose_name="用户"
+    )
+
+    create_time = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="领取时间"
+    )
+    coupon = models.ForeignKey(
+        Coupon,
+        verbose_name="优惠券"
+    )
