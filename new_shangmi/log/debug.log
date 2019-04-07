@@ -10609,3 +10609,1632 @@ UnboundLocalError: local variable 'is_success' referenced before assignment
 2018-12-10 09:57:15,204|execute|(0.000) SELECT `shangmi_store`.`id`, `shangmi_store`.`name`, `shangmi_store`.`address`, `shangmi_store`.`boss_id`, `shangmi_store`.`create_time`, `shangmi_store`.`is_active` FROM `shangmi_store` WHERE `shangmi_store`.`id` = 1; args=(1,)
 2018-12-10 09:57:15,205|execute|(0.000) SELECT `shangmi_shangmiuser`.`id`, `shangmi_shangmiuser`.`openid`, `shangmi_shangmiuser`.`create_time`, `shangmi_shangmiuser`.`nick_name`, `shangmi_shangmiuser`.`source`, `shangmi_shangmiuser`.`icon` FROM `shangmi_shangmiuser` WHERE `shangmi_shangmiuser`.`id` = 1; args=(1,)
 2018-12-10 09:57:15,206|log_message|"GET /shangmi/api/v1/store?token=7253fefc26e442aa81d7b373c3e0e9b0&sid=1 HTTP/1.1" 200 326
+2019-02-11 10:37:00,776|handle_uncaught_exception|Internal Server Error: /store/api/v1/today
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 42, in get
+    req.GET.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 10:37:00,776|handle_uncaught_exception|Internal Server Error: /store/api/v1/today
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 42, in get
+    req.GET.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 10:38:40,830|handle_uncaught_exception|Internal Server Error: /shangmi/api/v1/active-qr
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/shangmi/apis_v1.py", line 656, in get
+    store_id = int(params.get('store_id'))
+ValueError: invalid literal for int() with base 10: ''
+2019-02-11 10:38:40,830|handle_uncaught_exception|Internal Server Error: /shangmi/api/v1/active-qr
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/shangmi/apis_v1.py", line 656, in get
+    store_id = int(params.get('store_id'))
+ValueError: invalid literal for int() with base 10: ''
+2019-02-11 10:43:26,700|log_message|"GET /store/api/v1/today?token=9ae6ac4f9db3472aa780fa57c85d64e2 HTTP/1.1" 200 170
+2019-02-11 10:43:26,972|log_message|"POST /shangmi/api/v1/login HTTP/1.1" 200 76
+2019-02-11 10:43:27,104|log_message|"GET /shangmi/api/v1/active-qr?store_id=1 HTTP/1.1" 200 13009
+2019-02-11 10:44:18,199|handle_uncaught_exception|Internal Server Error: /shangmi/api/v1/active-qr
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/shangmi/apis_v1.py", line 656, in get
+    store_id = int(params.get('store_id'))
+ValueError: invalid literal for int() with base 10: ''
+2019-02-11 10:44:18,199|handle_uncaught_exception|Internal Server Error: /shangmi/api/v1/active-qr
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/shangmi/apis_v1.py", line 656, in get
+    store_id = int(params.get('store_id'))
+ValueError: invalid literal for int() with base 10: ''
+2019-02-11 10:44:20,061|log_message|"GET /shangmi/api/v1/active-qr?store_id= HTTP/1.1" 500 27
+2019-02-11 10:44:35,964|handle_uncaught_exception|Internal Server Error: /shangmi/api/v1/active-qr
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/shangmi/apis_v1.py", line 656, in get
+    store_id = int(params.get('store_id'))
+ValueError: invalid literal for int() with base 10: ''
+2019-02-11 10:44:35,964|handle_uncaught_exception|Internal Server Error: /shangmi/api/v1/active-qr
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/shangmi/apis_v1.py", line 656, in get
+    store_id = int(params.get('store_id'))
+ValueError: invalid literal for int() with base 10: ''
+2019-02-11 10:44:37,528|log_message|"GET /shangmi/api/v1/active-qr?store_id= HTTP/1.1" 500 27
+2019-02-11 11:10:04,479|handle_uncaught_exception|Internal Server Error: /store/api/v1/today
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 42, in get
+    req.GET.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 11:10:04,498|handle_uncaught_exception|Internal Server Error: /shangmi/api/v1/active-qr
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/shangmi/apis_v1.py", line 656, in get
+    store_id = int(params.get('store_id'))
+ValueError: invalid literal for int() with base 10: ''
+2019-02-11 11:10:05,899|handle_uncaught_exception|Internal Server Error: /shangmi/store/api/v1/expand
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/shangmi/store_apis_v1.py", line 17, in get
+    req.GET.get("token"))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 11:10:04,479|handle_uncaught_exception|Internal Server Error: /store/api/v1/today
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 42, in get
+    req.GET.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 11:10:04,498|handle_uncaught_exception|Internal Server Error: /shangmi/api/v1/active-qr
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/shangmi/apis_v1.py", line 656, in get
+    store_id = int(params.get('store_id'))
+ValueError: invalid literal for int() with base 10: ''
+2019-02-11 11:10:06,454|handle_uncaught_exception|Internal Server Error: /store/api/v1/boss_info
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 108, in get
+    user_info["phone"] = user.store_set.all().first().boss_phone
+AttributeError: 'NoneType' object has no attribute 'boss_phone'
+2019-02-11 11:10:05,899|handle_uncaught_exception|Internal Server Error: /shangmi/store/api/v1/expand
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/shangmi/store_apis_v1.py", line 17, in get
+    req.GET.get("token"))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 11:10:07,252|handle_uncaught_exception|Internal Server Error: /store/api/v1/today
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 46, in get
+    store = user.store_set.all()[0]
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/db/models/query.py", line 289, in __getitem__
+    return list(qs)[0]
+IndexError: list index out of range
+2019-02-11 11:10:06,454|handle_uncaught_exception|Internal Server Error: /store/api/v1/boss_info
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 108, in get
+    user_info["phone"] = user.store_set.all().first().boss_phone
+AttributeError: 'NoneType' object has no attribute 'boss_phone'
+2019-02-11 11:10:07,252|handle_uncaught_exception|Internal Server Error: /store/api/v1/today
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 46, in get
+    store = user.store_set.all()[0]
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/db/models/query.py", line 289, in __getitem__
+    return list(qs)[0]
+IndexError: list index out of range
+2019-02-11 11:13:28,764|handle_uncaught_exception|Internal Server Error: /store/api/v1/today
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 42, in get
+    req.GET.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 11:13:28,768|handle_uncaught_exception|Internal Server Error: /shangmi/api/v1/active-qr
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/shangmi/apis_v1.py", line 656, in get
+    store_id = int(params.get('store_id'))
+ValueError: invalid literal for int() with base 10: ''
+2019-02-11 11:13:28,764|handle_uncaught_exception|Internal Server Error: /store/api/v1/today
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 42, in get
+    req.GET.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 11:13:28,768|handle_uncaught_exception|Internal Server Error: /shangmi/api/v1/active-qr
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/shangmi/apis_v1.py", line 656, in get
+    store_id = int(params.get('store_id'))
+ValueError: invalid literal for int() with base 10: ''
+2019-02-11 11:14:24,503|handle_uncaught_exception|Internal Server Error: /store/api/v1/today
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 42, in get
+    req.GET.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 11:14:24,633|handle_uncaught_exception|Internal Server Error: /shangmi/api/v1/active-qr
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/shangmi/apis_v1.py", line 656, in get
+    store_id = int(params.get('store_id'))
+ValueError: invalid literal for int() with base 10: ''
+2019-02-11 11:14:24,633|handle_uncaught_exception|Internal Server Error: /shangmi/api/v1/active-qr
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/shangmi/apis_v1.py", line 656, in get
+    store_id = int(params.get('store_id'))
+ValueError: invalid literal for int() with base 10: ''
+2019-02-11 11:14:24,503|handle_uncaught_exception|Internal Server Error: /store/api/v1/today
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 42, in get
+    req.GET.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 11:14:25,804|handle_uncaught_exception|Internal Server Error: /shangmi/store/api/v1/expand
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/shangmi/store_apis_v1.py", line 17, in get
+    req.GET.get("token"))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 11:14:25,804|handle_uncaught_exception|Internal Server Error: /shangmi/store/api/v1/expand
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/shangmi/store_apis_v1.py", line 17, in get
+    req.GET.get("token"))
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 11:14:27,083|handle_uncaught_exception|Internal Server Error: /store/api/v1/boss_info
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 101, in get
+    req.GET.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 11:14:27,083|handle_uncaught_exception|Internal Server Error: /store/api/v1/boss_info
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 101, in get
+    req.GET.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:06,740|handle_uncaught_exception|Internal Server Error: /store/api/v1/today
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 42, in get
+    req.GET.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:06,720|handle_uncaught_exception|Internal Server Error: /shangmi/api/v1/active-qr
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/shangmi/apis_v1.py", line 656, in get
+    store_id = int(params.get('store_id'))
+ValueError: invalid literal for int() with base 10: ''
+2019-02-11 13:35:06,720|handle_uncaught_exception|Internal Server Error: /shangmi/api/v1/active-qr
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/shangmi/apis_v1.py", line 656, in get
+    store_id = int(params.get('store_id'))
+ValueError: invalid literal for int() with base 10: ''
+2019-02-11 13:35:06,740|handle_uncaught_exception|Internal Server Error: /store/api/v1/today
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 42, in get
+    req.GET.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:23,452|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:23,452|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:24,742|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:25,673|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:25,679|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:24,742|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:25,867|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:25,673|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:26,848|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:25,867|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:26,884|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:25,679|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:27,259|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:26,848|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:27,813|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:26,884|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:27,866|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:27,259|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:28,211|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:27,813|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:28,612|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:27,866|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:28,743|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:28,211|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:29,339|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:28,612|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:29,473|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:28,743|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:29,339|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:35:29,473|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:03,953|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:03,953|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:48,126|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:48,508|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:48,719|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:48,126|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:48,903|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:48,508|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:49,523|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:48,719|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:49,640|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:48,903|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:49,854|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:49,523|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:49,640|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:50,480|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:50,628|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:49,854|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:50,849|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:50,480|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:51,261|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:50,628|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:51,458|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:50,849|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:51,261|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:51,458|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:52,626|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:52,940|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:53,156|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:52,626|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:53,595|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:52,940|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:53,694|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:53,156|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:53,694|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:36:53,595|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:37:27,263|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:37:27,421|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:37:27,625|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:37:27,263|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:37:28,426|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:37:27,421|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:37:27,625|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+2019-02-11 13:37:28,426|handle_uncaught_exception|Internal Server Error: /store/api/v1/register
+Traceback (most recent call last):
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/exception.py", line 41, in inner
+    response = get_response(request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/core/handlers/base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 68, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/liuda/envs/python1806hz/lib/python3.5/site-packages/django/views/generic/base.py", line 88, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/liuda/newpro/new_shangmi/store/apis_v1.py", line 18, in post
+    req.POST.get("token")
+TypeError: int() argument must be a string, a bytes-like object or a number, not 'NoneType'

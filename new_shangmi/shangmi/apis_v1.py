@@ -61,11 +61,11 @@ class LoginAPI(View):
         response = requests.get(url, params=params)
 
         data = json.loads(response.content.decode())
-        session_key = data.get("session_key")
-        pc = WXBizDataCrypt(appid, session_key)
+        # session_key = data.get("session_key")
+        # pc = WXBizDataCrypt(appid, session_key)
 
         # print(pc.decrypt(encryptedData, iv))
-        decrypt_data = pc.decrypt(encryptedData, iv)
+        # decrypt_data = pc.decrypt(encryptedData, iv)
         if 'openid' in data:
             openid = data.get('openid')
             user = ShangmiUser.objects.get_or_create(openid=openid)[0]
@@ -100,8 +100,8 @@ class ActivesAPI(View):
                 tmp["percent"] = "30"
             else:
                 tmp["percent"] = round((i.complete_num / i.need_num) * 100, 2)
-                if tmp["percent"]<30:
-                    tmp["percent"] = 30
+                if tmp["percent"]<40:
+                    tmp["percent"] = random.randint(30, 40)
             fast_data.append(tmp)
         unfast_data = []
         for i in unfast:
@@ -148,6 +148,7 @@ class AdvAPI(View):
 class IndexAPI(View):
     # @login_req
     def get(self, req):
+        # print(req.GET.get("token"))
         user = ShangmiUser.objects.get(pk=int(user_cache.get(req.GET.get("token"))))
         actives = UserActiveLog.objects.filter(user=user)
         # 未通过的
@@ -366,10 +367,13 @@ class ActiveAPI(View):
         name = params.get("name","")+"推广"
         lat = params.get("lat", 0)
         lng = params.get("lng", 0)
-        range = params.get("range").split("公里")[0]
+        if params.get("range") == "不限制":
+            range = 10000000
+        else:
+            range = params.get("range").split("公里")[0]
         # 赏金
         givemoney = params.get("givemoney")
-        if int(givemoney) <= 0:
+        if float(givemoney) <= 0:
             data = {
                 "code": 1,
                 "msg": "赏金不能为0"
@@ -437,16 +441,18 @@ class ActiveAPI(View):
         active = Active.objects.get_or_create(
             name=name,
             icon=img_url,
+            detail_icon=img_url,
             desc=desc,
             need_num=need_num,
             share_give_money=share_give_money*100,
             rule=rule,
-            give_money=int(givemoney)*100,
+            give_money=float(givemoney)*100,
             is_active=False,
             lat=lat,
             lng=lng,
             range=range,
-            address=address
+            address=address,
+            detail_url="../storeJoin/storeJoin"
         )[0]
 #         创建活动与门店的关系映射 方便门店查看我发起的活动
         store_active_map = ActiveStoreMap.objects.get_or_create(
@@ -669,7 +675,7 @@ class StoreAPI(View):
             )
             )
         )
-        balance = Balance.objects.get(user_id=user.id)
+        balance = Balance.objects.get_or_create(user_id=user.id)[0]
         store_id = int(req.GET.get("sid"))
         store = Store.objects.get(id=store_id)
         if store.is_active == False:
@@ -830,18 +836,12 @@ class StoreSendMoneyHistoryAPI(View):
         return JsonResponse(data)
 #         获取时间 领取人 领取方式
 def test(req):
-    # openid = "oKVGo5aJ3r5hE_dl-y-dBcde683s"
-    # cus_name = "超遍历"
-    # money = 0.9
-    # order_id = "89347528934718"
-    # send_template_msg(openid, cus_name, money, order_id)
-    # from .utils import haversine
-    # print(haversine(120.266319, 30.307717, 120.264190000000000, 30.305400000000000))
     from io import BytesIO
     text = req.GET.get("text")
-    res = get_voice(text)
+    text="赏米成功收款%s元" % str(text)
+    res = get_voice(str(text))
     data = BytesIO(res)
-    return HttpResponse(data.getvalue(), content_type="audio/mp3")
+    return HttpResponse(data.getvalue(), content_type="audio/m4a")
 
 class BaoxianAPI(View):
 
@@ -1016,7 +1016,6 @@ class TiXianIndex(View):
         return JsonResponse(data)
 
 
-from .cannot_join_citys import citys, city2
 class CheckIdCardAPI(View):
 
     def get(self, req):

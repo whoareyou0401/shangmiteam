@@ -15,11 +15,14 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.http import HttpResponse
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r"^shangmi/api/v1/", include("shangmi.urls_apis_v1")),
     url(r"^shangmi/api/v1/pay/", include("shangmi.urls_apis_v1_pay")),
     url(r"^store/api/v1/", include("store.urls_apis_v1")),
-    url(r"^shangmi/store/api/v1/", include("shangmi.urls_store_apis_v1"))
+    url(r"^shangmi/store/api/v1/", include("shangmi.urls_store_apis_v1")),
+    url(r"^shangmi/api/v3/", include("shangmi.apis_v3.urls")),
 ]
+

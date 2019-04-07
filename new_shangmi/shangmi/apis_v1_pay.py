@@ -5,6 +5,7 @@ import datetime
 import time
 import requests
 from django.core.cache import cache, caches
+from django.db.models import Sum
 from django.http import HttpResponse, JsonResponse, QueryDict, HttpResponseForbidden
 from django.views.generic import View
 from os import environ
@@ -36,42 +37,6 @@ class OrderAPI(View):
             return JsonResponse(data)
         integral = 0
         status = 0
-        if use == "true":
-            need = money - float(user.balance.money)
-            if need < 0:
-                user.balance.money = float(user.balance.money) - money
-                user.balance.save()
-                is_success = 1
-                integral = money
-                status = 1
-                store_balance = Balance.objects.get_or_create(
-                    user=store.boss
-                )[0]
-                if store.is_receive:
-                    data = {
-                        "sid": store.id,
-                        "money": "%.1f" % (money / 100)
-                    }
-                    client.publish("buy", json.dumps(data))
-                # 店长余额等于 商户付的钱 加 客户使用的积分
-                store_balance.money = float(store_balance.money) + money + money
-                store_balance.save()
-                need=0
-            else:
-                integral = user.balance.money
-                # 用户积分清0
-                user.balance.money = 0
-                user.balance.save()
-                # 给店老板加钱
-                store_balance = Balance.objects.get_or_create(
-                    user=store.boss
-                )[0]
-                # store_balance.money = store_balance.money + integral
-                # store_balance.save()
-                # 需要付钱
-                is_success = 0
-        elif use=="false":
-            is_success = 0
         log = UserPayLog.objects.create(
             user=user,
             store_id=id,
@@ -79,6 +44,66 @@ class OrderAPI(View):
             integral=integral,
             status=status
         )
+        if use == "true":
+
+            need = money - float(user.balance.money)
+
+            if need <= 0:
+                user.balance.money = float(user.balance.money) - money
+                user.balance.save()
+                is_success = 1
+                log.money = 0
+                log.integral = money
+                log.status = 1
+                log.save()
+
+                if True:
+                    now = datetime.datetime.now()
+                    zore_now = now.replace(hour=0, minute=0, second=0)
+                    # 查看一个点
+                    logs = UserPayLog.objects.filter(
+                        store=store,
+                        create_time__gte=zore_now,
+                        create_time__lte=now,
+                        status=True
+                    )
+                    get_money = reward = 0
+                    for log in logs:
+                        get_money = get_money + log.integral + log.money
+                        reward += log.integral
+                    persons = logs.values('user_id').annotate(Sum('user_id'))
+                    if hasattr(user, "balance"):
+                        user_balance = user.balance.money
+                    else:
+                        user_balance = 0
+                    data = {
+                        "sid": store.id,
+                        "money": "%.2f" % (money / 100),
+                        "persons": len(persons),
+                        "reward": reward,
+                        "count": int(logs.count()),
+                        "get_money": get_money
+                    }
+                    res = client.publish("buy", json.dumps(data))
+                # 店长余额等于 商户付的钱 加 客户使用的积分
+
+                store.balance = store.balance + money + money
+                store.save()
+                need=0
+            else:
+                log.integral = user.balance.money
+                log.save()
+                # 需要付钱
+                is_success = 0
+        elif use=="false":
+            is_success = 0
+        # log = UserPayLog.objects.create(
+        #     user=user,
+        #     store_id=id,
+        #     money=need,
+        #     integral=integral,
+        #     status=status
+        # )
         if is_success == 0:
             log.wx_pay_num = create_mch_billno(str(log.id))
         order_num = datetime.datetime.now().strftime("%Y%m%d%H%M") + str(log.id)
@@ -187,22 +212,46 @@ class PayNotifyAPI(View):
             """
             todo 这里需要做签名校验
             """
-            # order_id = cache.get()
             log = UserPayLog.objects.get(wx_pay_num=resp.get('out_trade_no'))
             # log.wx_pay_num = resp.get('out_trade_no')
             if resp.get('appid') == settings.PAY_APPID \
                     and resp.get('mch_id') == settings.MCHID \
                     and float(resp.get('total_fee')) == log.money:
                 log.status = 1
-                log.store.boss.balance.money = log.store.boss.balance.money + log.money  + log.integral + log.integral
                 log.save()
-                log.store.boss.balance.save()
-                if log.store.is_receive:
+                log.user.balance.money -= log.integral
+                log.user.balance.save()
+                # 给老板加钱
+                log.store.balance = log.store.balance + log.money + log.integral + log.integral
+                log.store.save()
+                if True:
+                    now = datetime.datetime.now()
+                    zore_now = now.replace(hour=0, minute=0, second=0)
+                    # 查看一个点
+                    logs = UserPayLog.objects.filter(
+                        store=log.store,
+                        create_time__gte=zore_now,
+                        create_time__lte=now,
+                        status=True
+                    )
+                    get_money = reward = 0
+                    for log in logs:
+                        get_money = get_money + log.integral + log.money
+                        reward += log.integral
+                    persons = logs.values('user_id').annotate(Sum('user_id'))
+                    # if hasattr(log.user, "balance"):
+                    #     user_balance = log.user.balance.money
+                    # else:
+                    #     user_balance = 0
                     data = {
                         "sid": log.store.id,
-                        "money": round((log.money + log.integral) / 100, 1)
+                        "money": "%.2f" % ((log.money+log.integral) / 100),
+                        "persons": len(persons),
+                        "reward": reward,
+                        "count": int(logs.count()),
+                        "get_money": get_money
                     }
-                    client.publish("buy", json.dumps(data))
+                    res = client.publish("buy", json.dumps(data))
                 # send_template_msg(log.user.openid,log, log.prepay_id )
                 data['return_code'] = 'SUCCESS'
                 data['return_msg'] = 'OK'
@@ -229,8 +278,40 @@ class StoreGetMoneyAPI(View):
             req.POST.get("token")
         )))
         params = req.POST
+        if "zm" not in params:
+            return JsonResponse({"code": 1, "msg": "一切破解都是徒劳的，收手吧"})
         # store = user.store_set.all()[0]
         money = float(params.get('money'))
+        # 没写完
+        code = params.get("code")
+        phone = params.get("phone")
+        cache_code = cache.get("baoxian" + phone)
+        if cache_code and code == cache_code:
+            pass
+        else:
+            data = {
+                "code": 1,
+                "msg": "验证码无效"
+            }
+            return JsonResponse(data)
+
+        stores = Store.objects.filter(boss_id=user.id)
+        if stores.exists():
+            store = stores.first()
+        else:
+            return JsonResponse({"code": 1, "msg": "暂无门店"})
+        if store.get_money_phone is None:
+
+            return JsonResponse({
+                "code": 1,
+                "msg": "请先联系商务合作为您分配支付手机号"
+            })
+        if phone != store.get_money_phone or store.get_money_phone is None:
+            boss_phone = store.get_money_phone[:3] + "*"*4 + store.get_money_phone[7:]
+            return JsonResponse({
+                "code": 1,
+                "msg": "请使用手机号%s进行操作" % boss_phone
+            })
         if money<1:
             data = {
                 "code": 2,
@@ -321,20 +402,28 @@ class StoreGetMoneyAPI(View):
                             cert=(settings.WEIXIN_PAY_CERT_PATH, settings.WEIXIN_PAY_CERT_KEY_PATH))
         rdict = xml_response_to_dict(raw)
         data = {}
+        stores = Store.objects.filter(boss_id=user.id)
+        if stores.exists():
+            store = stores.first()
+        else:
+            return JsonResponse({"code": 1, "msg": '您未绑定门店'})
         if rdict.get("return_code") == "SUCCESS" and rdict.get("result_code") == "SUCCESS":
             payment_no = rdict.get("payment_no")
             log.payment_no = payment_no
             log.is_ok = True
             log.save()
-            user.balance.money = float(user.balance.money) - money * 100
-            user.balance.save()
+
+            # user.balance.money = float(user.balance.money) - money * 100
+            # user.balance.save()
+            store.balance -= money * 100
+            store.save()
             data["code"] = 0
-            data["data"] = {"current_money": user.balance.money}
+            data["data"] = {"current_money": store.balance}
         else:
             msg = "门店客户提现 用户id：%s支付问题%s" % (str(user.id), rdict.get("err_code_des"))
             send_my_normal_mail(msg)
             data = {
-                "data":{"current_money": user.balance.money},
+                "data":{"current_money": store.balance},
                 "msg":"您今日不可提现了",
                 "code":1
             }
@@ -570,33 +659,19 @@ class StorePayNotifyAPI(View):
             """
             # order_id = cache.get()
             log = UserRecharge.objects.get(wx_pay_num=resp.get('out_trade_no'))
-            # log.wx_pay_num = resp.get('out_trade_no')
-
-
-
             if resp.get('appid') == environ.get('PAY_STORE_GET_MONEY_APPID') \
                     and resp.get('mch_id') == settings.MCHID \
                     and float(resp.get('total_fee')) == log.money * 100:
                 log.is_ok = True
                 log.save()
-                try:
-                    balance = Balance.objects.get(
-                        user_id=log.user.id
-                    )
-                except:
-                    balance = Balance.objects.create(
-                        user_id=log.user.id
-                    )
-                balance.money += log.money * 100
-                balance.save()
-                # 门店活动
-                # store = log.user.store_set.all()[0]
-                # balance = StoreActiveBalance.objects.get_or_create(
-                #     store=store
-                # )[0]
-                # balance.balance += log.money * 100
-                # balance.save()
-                # log.user.store_set.all()[0].boss.balance.save()
+                stores = Store.objects.filter(boss_id=log.user.id)
+                if stores.exists():
+                    store = stores.first()
+                else:
+                    return JsonResponse({"code": 1, "msg": '您未绑定门店'})
+                # 门店余额增加
+                store.balance += log.money * 100
+                store.save()
                 data['return_code'] = 'SUCCESS'
                 data['return_msg'] = 'OK'
             else:

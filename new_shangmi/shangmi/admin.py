@@ -8,8 +8,9 @@ class UserAdmin(admin.ModelAdmin):
     search_fields = ["nick_name", "source"]
     list_filter = ["source"]
 
-class ActiveAdmin(admin.ModelAdmin):
 
+class ActiveAdmin(admin.ModelAdmin):
+    list_filter = ["is_active"]
     list_display = ["name", "give_money", "share_give_money", "complete_num", "need_num"]
 
 

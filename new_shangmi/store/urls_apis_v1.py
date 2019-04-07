@@ -7,6 +7,7 @@ urlpatterns = [
     url(r"^boss_info$", BossInfoAPI.as_view()),
     url(r"^reward$", StoreRewardAPI.as_view()),
     url(r"^income-detail$",StoreIncomeMoneyAPI.as_view()),
-    url(r"^notice$", StoreReceiveNotice.as_view())
+    url(r"^notice$", StoreReceiveNotice.as_view()),
+    url(r"^store$", StoreAPI.as_view())
 ]
 

@@ -85,15 +85,15 @@ DATABASES = {
         "PASSWORD": os.environ.get("DBPWD")
     }
 }
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
-    }
-}
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         "LOCATION": "redis://127.0.0.1:6379/1",
+#         "OPTIONS": {
+#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+#         }
+#     }
+# }
 
 
 # Password validation
@@ -145,9 +145,10 @@ EMAIL_HOST = 'smtp.qq.com'  # 如果是 163 改成 smtp.163.com
 
 EMAIL_PORT = 465
 
-EMAIL_HOST_USER = "493024318@qq.com"  # 帐号
 
-EMAIL_HOST_PASSWORD = "yaricwaaydxvbggb"  # 授权码（****）
+EMAIL_HOST_USER = "1038475854@qq.com" # 帐号
+
+EMAIL_HOST_PASSWORD = "dhlgvfuezdarbdac"
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_BACKEND ='django.core.mail.backends.smtp.EmailBackend'
@@ -256,3 +257,14 @@ OSS_ACCESS_KEY_SECRET = os.environ.get("OSS_ACCESS_KEY_SECRET")#'7uXYe15rjLzEjSt
 bucket_name = 'shangmi'
 bucket_name_host = "shangmi.oss-cn-shanghai.aliyuncs.com/apps/"
 # https://shangmi.oss-cn-beijing.aliyuncs.com/apps/active1adv.png
+ADMINS = (
+    ("liuda", "1625211623@qq.com"),
+)
+
+import djcelery
+djcelery.setup_loader()
+BROKER_URL='redis://localhost:6379/1'
+CELERY_CONCURRENCY=2 #（设置worker的并发数量）
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/2'
+CELERY_TASK_SERIALIZER = 'json'              # 任务序列化和反序列化使用json
+CELERY_RESULT_SERIALIZER = 'json'

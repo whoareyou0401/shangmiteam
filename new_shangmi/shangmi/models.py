@@ -118,7 +118,8 @@ class Store(models.Model):
     )
     boss = models.ForeignKey(
         ShangmiUser,
-        verbose_name="店老板"
+        verbose_name="店老板",
+        null=True
     )
     create_time = models.DateTimeField(
         verbose_name="创建时间",
@@ -138,12 +139,26 @@ class Store(models.Model):
         verbose_name="是否接收通知"
     )
     is_receive =models.BooleanField(
-        default=True,
+        default=False,
         verbose_name="语音通知状态"
     )
     free_date = models.DateField(
         null=True,
         verbose_name="免费使用到期时间"
+    )
+    balance = models.IntegerField(
+        default=0,
+        verbose_name="门店余额(分)"
+    )
+    get_money_pwd = models.CharField(
+        max_length=255,
+        verbose_name="提现密码",
+        null=True
+    )
+    get_money_phone = models.CharField(
+        max_length=16,
+        verbose_name="提现老板手机号",
+        null=True
     )
     def __str__(self):
         return self.name
@@ -376,6 +391,10 @@ class UserRecharge(models.Model):
         max_length=255,
         verbose_name="微信支付订单号"
     )
+    recharge_type = models.CharField(
+        default="账户余额",
+        max_length=20
+    )
     class Meta:
         verbose_name="门店用户充值"
 
@@ -443,3 +462,72 @@ class UserGetCoupon(models.Model):
         Coupon,
         verbose_name="优惠券"
     )
+
+class BaoxianData(models.Model):
+    name = models.CharField(
+        max_length=10,
+        verbose_name="人名"
+    )
+    phone = models.CharField(
+        max_length=13,
+        verbose_name="手机号"
+    )
+    idcard = models.CharField(
+        max_length=30,
+        verbose_name="身份证",
+        db_index=True
+    )
+    is_ok = models.BooleanField(
+        default=False
+    )
+    use_time = models.DateTimeField(
+        auto_now=True,
+        null=True,
+        verbose_name="使用时间"
+    )
+    fail_msg = models.CharField(
+        max_length=255,
+        null=True,
+        verbose_name="失败原因"
+    )
+    is_used = models.BooleanField(
+        default=0,
+        verbose_name="是否被使用"
+    )
+    class Meta:
+        db_table = "baoxian_data"
+
+
+class BaoxianData_1(models.Model):
+    name = models.CharField(
+        max_length=10,
+        verbose_name="人名"
+    )
+    phone = models.CharField(
+        max_length=13,
+        verbose_name="手机号"
+    )
+    idcard = models.CharField(
+        max_length=30,
+        verbose_name="身份证",
+        db_index=True
+    )
+    is_ok = models.BooleanField(
+        default=False
+    )
+    use_time = models.DateTimeField(
+        auto_now=True,
+        null=True,
+        verbose_name="使用时间"
+    )
+    fail_msg = models.CharField(
+        max_length=255,
+        null=True,
+        verbose_name="失败原因"
+    )
+    is_used = models.BooleanField(
+        default=0,
+        verbose_name="是否被使用"
+    )
+    class Meta:
+        db_table = "baoxian_data_1"

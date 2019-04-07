@@ -9,12 +9,13 @@ class WXBizDataCrypt:
 
     def decrypt(self, encryptedData, iv):
         # base64 decode
+        encryptedData = encryptedData.encode()
         sessionKey = base64.b64decode(self.sessionKey)
         encryptedData = base64.b64decode(encryptedData)
         iv = base64.b64decode(iv)
 
         cipher = AES.new(sessionKey, AES.MODE_CBC, iv)
-        my_str = self._unpad(cipher.decrypt(encryptedData)).decode()
+        my_str = self._unpad(cipher.decrypt(encryptedData.decode())).decode()
         decrypted = json.loads(my_str)
         if decrypted['watermark']['appid'] != self.appId:
             raise Exception('Invalid Buffer')
